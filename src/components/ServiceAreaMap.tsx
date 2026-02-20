@@ -32,15 +32,15 @@ const ServiceAreaMap = () => {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
-      const redIcon = L.divIcon({
+      const keyIcon = L.divIcon({
         className: "custom-marker",
-        html: `<div style="width:14px;height:14px;background:#E31B23;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(227,27,35,0.6);"></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
+        html: `<div style="filter:drop-shadow(0 0 6px rgba(227,27,35,0.6));font-size:24px;line-height:1;">🔑</div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
       });
 
       activeLocations.forEach((loc) => {
-        L.marker([loc.lat, loc.lng], { icon: redIcon })
+        L.marker([loc.lat, loc.lng], { icon: keyIcon })
           .addTo(map)
           .bindPopup(`<strong>${loc.cityName}</strong><br/>Xcel Locksmith serves this area`);
       });
@@ -59,8 +59,9 @@ const ServiceAreaMap = () => {
   }, []);
 
   return (
-    <section id="service-area" className="py-20 relative">
-      <div className="container mx-auto px-4">
+    <section id="service-area" className="py-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsla(218,46%,20%,0.15)_0%,_transparent_70%)]" />
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
             Our <span className="text-accent">Service Area</span>
@@ -70,7 +71,7 @@ const ServiceAreaMap = () => {
           </p>
         </motion.div>
 
-        <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="glass-card-strong rounded-2xl overflow-hidden">
           <div ref={mapRef} className="w-full h-[400px] md:h-[500px]" />
         </div>
 

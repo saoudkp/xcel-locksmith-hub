@@ -9,6 +9,23 @@ const HeroSection = () => {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-page" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsla(356,82%,50%,0.08)_0%,_transparent_60%)]" />
+      
+      {/* Parallax floating elements */}
+      <motion.div
+        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-accent/5 blur-3xl"
+        animate={{ y: [0, -30, 0], x: [0, 15, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-32 right-20 w-48 h-48 rounded-full bg-primary/10 blur-3xl"
+        animate={{ y: [0, 20, 0], x: [0, -20, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-1/4 w-24 h-24 rounded-full bg-accent/3 blur-2xl"
+        animate={{ y: [0, -40, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">

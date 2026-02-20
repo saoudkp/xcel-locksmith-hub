@@ -19,17 +19,17 @@ const StickyHeader = () => {
       <div className="container mx-auto px-4 flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img src={logo} alt="Xcel Locksmith" className="h-12 md:h-16 w-auto" />
+          <img src={logo} alt="Xcel Locksmith" className="h-14 md:h-20 w-auto rounded-lg mix-blend-lighten" />
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-silver-light">
-          <a href="#services" className="hover:text-foreground transition-colors">Services</a>
-          <a href="#vehicle-verifier" className="hover:text-foreground transition-colors">Vehicle Check</a>
-          <a href="#quote" className="hover:text-foreground transition-colors">Free Quote</a>
-          <a href="#reviews" className="hover:text-foreground transition-colors">Reviews</a>
-          <a href="#faq" className="hover:text-foreground transition-colors">FAQ</a>
-          <a href="#service-area" className="hover:text-foreground transition-colors">Service Area</a>
+          <a href="#services" className="glass-nav-link hover:text-foreground transition-colors">Services</a>
+          <a href="#vehicle-verifier" className="glass-nav-link hover:text-foreground transition-colors">Vehicle Check</a>
+          <a href="#quote" className="glass-nav-link hover:text-foreground transition-colors">Free Quote</a>
+          <a href="#reviews" className="glass-nav-link hover:text-foreground transition-colors">Reviews</a>
+          <a href="#faq" className="glass-nav-link hover:text-foreground transition-colors">FAQ</a>
+          <a href="#service-area" className="glass-nav-link hover:text-foreground transition-colors">Service Area</a>
         </nav>
 
         {/* Desktop ETA + CTA */}
