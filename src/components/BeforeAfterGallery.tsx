@@ -42,13 +42,15 @@ const CategoryCard = ({
   onCategoryClick: (category: string) => void;
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
+    if (hovered) return;
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % items.length);
-    }, 3500);
+    }, 6000);
     return () => clearInterval(interval);
-  }, [items.length]);
+  }, [items.length, hovered]);
 
   const current = items[activeIndex];
 
@@ -60,6 +62,8 @@ const CategoryCard = ({
       transition={{ duration: 0.4 }}
       className="glass-card rounded-xl overflow-hidden group cursor-pointer"
       onClick={() => onCategoryClick(category)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <AnimatePresence mode="wait">
