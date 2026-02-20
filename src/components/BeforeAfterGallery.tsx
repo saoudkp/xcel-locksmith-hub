@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { X, Maximize2 } from "lucide-react";
 import ComparisonSlider from "./ComparisonSlider";
 
 import before1 from "@/assets/gallery/before-1.jpg";
@@ -30,24 +30,103 @@ const galleryItems: GalleryItem[] = [
   { id: 9, title: "Panic Bar Installation", category: "Commercial", before: before3, after: after3 },
 ];
 
-const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
+const categories = ["Residential", "Automotive", "Commercial"];
+
+const CategoryCard = ({
+  category,
+  items,
+  onCategoryClick,
+}: {
+  category: string;
+  items: GalleryItem[];
+  onCategoryClick: (category: string) => void;
+}) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % items.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [items.length]);
+
+  const current = items[activeIndex];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+      className="glass-card rounded-xl overflow-hidden group cursor-pointer"
+      onClick={() => onCategoryClick(category)}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="absolute inset-0"
+          >
+            <ComparisonSlider
+              before={current.before}
+              after={current.after}
+              className="w-full h-full cursor-ew-resize"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Expand icon */}
+        <div className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-background/60 backdrop-blur-sm text-foreground opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <Maximize2 className="w-4 h-4" />
+        </div>
+      </div>
+
+      <div className="p-4">
+        <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+          {category}
+        </span>
+        <AnimatePresence mode="wait">
+          <motion.h3
+            key={current.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+            className="text-foreground font-display text-lg mt-1"
+          >
+            {current.title}
+          </motion.h3>
+        </AnimatePresence>
+        <p className="text-muted-foreground text-sm mt-1">
+          {items.length} projects · Click to view all
+        </p>
+
+        {/* Dots indicator */}
+        <div className="flex gap-1.5 mt-3">
+          {items.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                i === activeIndex ? "w-6 bg-accent" : "w-2 bg-muted-foreground/30"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const BeforeAfterGallery = () => {
-  const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [fullscreenItem, setFullscreenItem] = useState<GalleryItem | null>(null);
 
-  const filteredItems = activeCategory === "All" ? galleryItems : galleryItems.filter((i) => i.category === activeCategory);
-
-  const openFullscreen = (item: GalleryItem) => setSelectedItem(item);
-  const closeFullscreen = () => setSelectedItem(null);
-
-  const navigateFullscreen = (dir: number) => {
-    if (!selectedItem) return;
-    const list = filteredItems;
-    const idx = list.findIndex((i) => i.id === selectedItem.id);
-    const next = (idx + dir + list.length) % list.length;
-    setSelectedItem(list[next]);
-  };
+  const getItemsByCategory = (cat: string) =>
+    galleryItems.filter((i) => i.category === cat);
 
   return (
     <section id="gallery" className="py-20 px-4" aria-label="Before & After Gallery">
@@ -63,72 +142,96 @@ const BeforeAfterGallery = () => {
             Before & After Gallery
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Drag the slider on any image to compare before and after results.
+            Browse our work across residential, automotive & commercial locksmithing.
+            Click a category to see all projects.
           </p>
-
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  activeCategory === cat
-                    ? "bg-accent text-primary-foreground"
-                    : "glass-card text-muted-foreground hover:text-foreground hover:bg-foreground/5"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="glass-card rounded-xl overflow-hidden group"
-            >
-              <div className="relative aspect-[4/3]">
-                <ComparisonSlider
-                  before={item.before}
-                  after={item.after}
-                  className="w-full h-full cursor-ew-resize"
-                />
-                <button
-                  onClick={() => openFullscreen(item)}
-                  className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-background/60 backdrop-blur-sm text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="View fullscreen"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="p-4">
-                <span className="text-xs font-semibold text-accent uppercase tracking-wider">
-                  {item.category}
-                </span>
-                <h3 className="text-foreground font-display text-lg mt-1">{item.title}</h3>
-                <p className="text-muted-foreground text-sm mt-1">Drag slider to compare</p>
-              </div>
-            </motion.div>
+        {/* 3 Category Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <CategoryCard
+              key={cat}
+              category={cat}
+              items={getItemsByCategory(cat)}
+              onCategoryClick={setOpenCategory}
+            />
           ))}
         </div>
       </div>
 
-      {/* Fullscreen Overlay */}
+      {/* Category Collage Popup */}
       <AnimatePresence>
-        {selectedItem && (
+        {openCategory && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-            onClick={closeFullscreen}
+            className="fixed inset-0 z-[100] bg-black/90 overflow-y-auto p-4 md:p-8"
+            onClick={() => setOpenCategory(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25 }}
+              className="max-w-5xl mx-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-white font-display text-2xl md:text-3xl">
+                  {openCategory} <span className="text-accent">Projects</span>
+                </h3>
+                <button
+                  onClick={() => setOpenCategory(null)}
+                  className="text-white/70 hover:text-white transition-colors p-2"
+                  aria-label="Close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {getItemsByCategory(openCategory).map((item, i) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="rounded-xl overflow-hidden bg-white/5 group cursor-pointer"
+                    onClick={() => setFullscreenItem(item)}
+                  >
+                    <div className="relative aspect-[4/3]">
+                      <ComparisonSlider
+                        before={item.before}
+                        after={item.after}
+                        className="w-full h-full cursor-ew-resize"
+                      />
+                      <div className="absolute bottom-2 right-2 z-30 p-1.5 rounded-full bg-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <Maximize2 className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+                    <div className="p-3">
+                      <h4 className="text-white font-semibold text-sm">{item.title}</h4>
+                      <p className="text-white/50 text-xs mt-0.5">Drag slider to compare</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen Single Item */}
+      <AnimatePresence>
+        {fullscreenItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center p-4"
+            onClick={() => setFullscreenItem(null)}
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0 }}
@@ -139,39 +242,24 @@ const BeforeAfterGallery = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                onClick={closeFullscreen}
+                onClick={() => setFullscreenItem(null)}
                 className="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors z-20"
                 aria-label="Close fullscreen"
               >
                 <X className="w-6 h-6" />
               </button>
 
-              <button
-                onClick={() => navigateFullscreen(-1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-                aria-label="Previous"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={() => navigateFullscreen(1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-                aria-label="Next"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-
               <div className="rounded-xl overflow-hidden aspect-[16/9]">
                 <ComparisonSlider
-                  before={selectedItem.before}
-                  after={selectedItem.after}
+                  before={fullscreenItem.before}
+                  after={fullscreenItem.after}
                   className="w-full h-full cursor-ew-resize"
                 />
               </div>
 
               <div className="text-center mt-4">
-                <h3 className="text-white font-display text-xl">{selectedItem.title}</h3>
-                <p className="text-white/60 text-sm">{selectedItem.category}</p>
+                <h3 className="text-white font-display text-xl">{fullscreenItem.title}</h3>
+                <p className="text-white/60 text-sm">{fullscreenItem.category}</p>
               </div>
             </motion.div>
           </motion.div>
