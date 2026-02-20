@@ -23,7 +23,7 @@ const KeyRating = ({ rating, size = 16, interactive = false, onChange }: {
           size={size}
           className={`transition-colors duration-300 ${
             i < rating
-              ? "text-accent fill-accent drop-shadow-[0_0_4px_hsl(var(--accent)/0.5)]"
+              ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
               : "text-muted-foreground/30"
           } ${interactive && i < rating ? "rotate-12" : ""}`}
         />
