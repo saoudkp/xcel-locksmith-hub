@@ -6,7 +6,63 @@
 
 @layer base {
   :root {
-    /* Xcel Locksmith Brand - Dark Theme Only */
+    --background: 0 0% 100%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 218 46% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 20% 15%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Custom brand tokens */
+    --navy: 218 46% 30%;
+    --navy-deep: 220 30% 92%;
+    --blue: 217 91% 60%;
+    --blue-glow: 217 91% 50%;
+    --silver: 220 10% 40%;
+    --silver-light: 220 10% 30%;
+    --near-black: 0 0% 98%;
+    --cta-red: 356 82% 50%;
+    --cta-red-glow: 356 82% 45%;
+
+    /* Glassmorphism - light */
+    --glass-bg: 0 0% 100% / 0.6;
+    --glass-border: 220 15% 80% / 0.5;
+    --glass-blur: 20px;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 220 20% 15%;
+    --sidebar-border: 220 13% 90%;
+    --sidebar-ring: 217 91% 60%;
+  }
+
+  .dark {
     --background: 220 40% 4%;
     --foreground: 0 0% 95%;
 
@@ -45,6 +101,8 @@
     --silver: 0 0% 75%;
     --silver-light: 0 0% 90%;
     --near-black: 0 0% 4%;
+    --cta-red: 356 82% 50%;
+    --cta-red-glow: 356 82% 60%;
 
     /* Glassmorphism */
     --glass-bg: 220 30% 12% / 0.6;
@@ -84,26 +142,38 @@
 
 @layer components {
   .glass-card {
-    background: hsla(220, 30%, 12%, 0.45);
+    background: hsla(var(--glass-bg));
     backdrop-filter: blur(24px) saturate(1.4);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border: 1px solid hsla(var(--glass-border));
+    box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.08), inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
+  }
+
+  .dark .glass-card {
     box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.3), inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
   }
 
   .glass-card-strong {
-    background: hsla(220, 30%, 10%, 0.65);
+    background: hsla(var(--glass-bg));
     backdrop-filter: blur(32px) saturate(1.6);
     -webkit-backdrop-filter: blur(32px) saturate(1.6);
-    border: 1px solid hsla(0, 0%, 100%, 0.12);
+    border: 1px solid hsla(var(--glass-border));
+    box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.1), inset 0 1px 0 hsla(0, 0%, 100%, 0.08);
+  }
+
+  .dark .glass-card-strong {
     box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.4), inset 0 1px 0 hsla(0, 0%, 100%, 0.08);
   }
 
   .glass-header {
-    background: hsla(220, 30%, 6%, 0.7);
+    background: hsla(var(--glass-bg));
     backdrop-filter: blur(32px) saturate(1.8);
     -webkit-backdrop-filter: blur(32px) saturate(1.8);
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-bottom: 1px solid hsla(var(--glass-border));
+    box-shadow: 0 4px 30px hsla(0, 0%, 0%, 0.08);
+  }
+
+  .dark .glass-header {
     box-shadow: 0 4px 30px hsla(0, 0%, 0%, 0.3);
   }
 
