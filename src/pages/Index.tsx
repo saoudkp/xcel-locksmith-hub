@@ -6,6 +6,7 @@ import QuoteTool from "@/components/QuoteTool";
 import ReviewsSection from "@/components/ReviewsSection";
 import FAQSection from "@/components/FAQSection";
 import ServiceAreaMap from "@/components/ServiceAreaMap";
+import VisitorCounter from "@/components/VisitorCounter";
 import Footer from "@/components/Footer";
 import { LocalBusinessSchema, FAQSchema } from "@/components/StructuredData";
 
@@ -23,8 +24,9 @@ const Index = () => {
         <VehicleVerifier />
         <QuoteTool />
         <ReviewsSection />
-        <FAQSection />
         <ServiceAreaMap />
+        <FAQSection />
+        <VisitorCounter />
       </main>
 
       <Footer />

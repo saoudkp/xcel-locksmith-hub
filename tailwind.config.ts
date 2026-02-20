@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ["Oswald", "sans-serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
