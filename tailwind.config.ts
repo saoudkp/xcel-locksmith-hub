@@ -53,8 +53,8 @@ export default {
         },
         navy: "hsl(var(--navy))",
         "navy-deep": "hsl(var(--navy-deep))",
-        red: "hsl(var(--red))",
-        "red-glow": "hsl(var(--red-glow))",
+        blue: "hsl(var(--blue))",
+        "blue-glow": "hsl(var(--blue-glow))",
         silver: "hsl(var(--silver))",
         "silver-light": "hsl(var(--silver-light))",
         sidebar: {
@@ -83,8 +83,8 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 15px hsla(356,82%,50%,0.4)" },
-          "50%": { boxShadow: "0 0 30px hsla(356,82%,50%,0.7), 0 0 60px hsla(356,82%,50%,0.3)" },
+          "0%, 100%": { boxShadow: "0 0 15px hsla(217,91%,60%,0.4)" },
+          "50%": { boxShadow: "0 0 30px hsla(217,91%,60%,0.6), 0 0 60px hsla(217,91%,60%,0.25)" },
         },
       },
       animation: {

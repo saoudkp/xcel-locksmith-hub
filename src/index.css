@@ -25,23 +25,23 @@
     --muted: 220 15% 12%;
     --muted-foreground: 220 10% 55%;
 
-    --accent: 356 82% 50%;
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 356 82% 50%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 15% 18%;
     --input: 220 15% 15%;
-    --ring: 356 82% 50%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
     /* Custom brand tokens */
     --navy: 218 46% 20%;
     --navy-deep: 220 40% 10%;
-    --red: 356 82% 50%;
-    --red-glow: 356 82% 60%;
+    --blue: 217 91% 60%;
+    --blue-glow: 217 91% 70%;
     --silver: 0 0% 75%;
     --silver-light: 0 0% 90%;
     --near-black: 0 0% 4%;
@@ -53,12 +53,12 @@
 
     --sidebar-background: 220 30% 6%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 356 82% 50%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 20% 14%;
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 356 82% 50%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -107,8 +107,8 @@
     box-shadow: 0 4px 30px hsla(0, 0%, 0%, 0.3);
   }
 
-  .glow-red {
-    box-shadow: 0 0 20px hsla(var(--red), 0.4), 0 0 60px hsla(var(--red), 0.15);
+  .glow-blue {
+    box-shadow: 0 0 20px hsla(217, 91%, 60%, 0.4), 0 0 60px hsla(217, 91%, 60%, 0.15);
   }
 
   .glow-navy {

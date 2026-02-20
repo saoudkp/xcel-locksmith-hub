@@ -8,7 +8,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center pt-28 md:pt-24 pb-16 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-page" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsla(356,82%,50%,0.08)_0%,_transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsla(217,91%,60%,0.08)_0%,_transparent_60%)]" />
       
       {/* Parallax floating elements */}
       <motion.div
@@ -79,7 +79,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="inline-flex items-center gap-3 glass-card px-6 py-4 rounded-2xl mb-8 glow-red"
+            className="inline-flex items-center gap-3 glass-card px-6 py-4 rounded-2xl mb-8 glow-blue"
           >
             <Clock className="w-8 h-8 text-accent" />
             <div className="text-left">
@@ -97,7 +97,7 @@ const HeroSection = () => {
           >
             <a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center justify-center gap-3 bg-accent hover:bg-red-glow text-accent-foreground font-bold text-lg px-8 py-4 rounded-xl transition-all animate-pulse-glow"
+              className="touch-target flex items-center justify-center gap-3 bg-accent hover:bg-blue-glow text-accent-foreground font-bold text-lg px-8 py-4 rounded-xl transition-all animate-pulse-glow"
             >
               <Phone className="w-6 h-6" />
               Call (216) 555-1234 Now
