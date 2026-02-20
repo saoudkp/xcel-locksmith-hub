@@ -55,6 +55,8 @@ export default {
         "navy-deep": "hsl(var(--navy-deep))",
         blue: "hsl(var(--blue))",
         "blue-glow": "hsl(var(--blue-glow))",
+        "cta-red": "hsl(var(--cta-red))",
+        "cta-red-glow": "hsl(var(--cta-red-glow))",
         silver: "hsl(var(--silver))",
         "silver-light": "hsl(var(--silver-light))",
         sidebar: {
@@ -86,11 +88,16 @@ export default {
           "0%, 100%": { boxShadow: "0 0 15px hsla(217,91%,60%,0.4)" },
           "50%": { boxShadow: "0 0 30px hsla(217,91%,60%,0.6), 0 0 60px hsla(217,91%,60%,0.25)" },
         },
+        "pulse-glow-red": {
+          "0%, 100%": { boxShadow: "0 0 15px hsla(356,82%,50%,0.4)" },
+          "50%": { boxShadow: "0 0 30px hsla(356,82%,50%,0.7), 0 0 60px hsla(356,82%,50%,0.3)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "pulse-glow-red": "pulse-glow-red 2s ease-in-out infinite",
       },
     },
   },

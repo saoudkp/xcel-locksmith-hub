@@ -97,7 +97,7 @@ const HeroSection = () => {
           >
             <a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center justify-center gap-3 bg-accent hover:bg-blue-glow text-accent-foreground font-bold text-lg px-8 py-4 rounded-xl transition-all animate-pulse-glow"
+              className="touch-target flex items-center justify-center gap-3 bg-cta-red hover:bg-cta-red-glow text-white font-bold text-lg px-8 py-4 rounded-xl transition-all animate-pulse-glow-red"
             >
               <Phone className="w-6 h-6" />
               Call (216) 555-1234 Now
