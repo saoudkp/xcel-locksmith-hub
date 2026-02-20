@@ -19,13 +19,21 @@ interface GalleryItem {
 
 const galleryItems: GalleryItem[] = [
   { id: 1, title: "Residential Deadbolt Replacement", category: "Residential", before: before1, after: after1 },
-  { id: 2, title: "Car Lock Cylinder Repair", category: "Automotive", before: before2, after: after2 },
-  { id: 3, title: "Commercial Access Control Upgrade", category: "Commercial", before: before3, after: after3 },
+  { id: 2, title: "Front Door Lock Rekey", category: "Residential", before: before1, after: after1 },
+  { id: 3, title: "Car Lock Cylinder Repair", category: "Automotive", before: before2, after: after2 },
+  { id: 4, title: "Transponder Key Programming", category: "Automotive", before: before2, after: after2 },
+  { id: 5, title: "Commercial Access Control Upgrade", category: "Commercial", before: before3, after: after3 },
+  { id: 6, title: "Office Master Key System", category: "Commercial", before: before3, after: after3 },
 ];
+
+const categories = ["All", ...Array.from(new Set(galleryItems.map((i) => i.category)))];
 
 const BeforeAfterGallery = () => {
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [showAfter, setShowAfter] = useState<Record<number, boolean>>({});
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredItems = activeCategory === "All" ? galleryItems : galleryItems.filter((i) => i.category === activeCategory);
 
   const toggleBeforeAfter = (id: number) => {
     setShowAfter((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -57,10 +65,27 @@ const BeforeAfterGallery = () => {
           <p className="text-muted-foreground max-w-xl mx-auto">
             See the quality of our locksmith work — tap any card to toggle before/after.
           </p>
+
+          {/* Category filter tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  activeCategory === cat
+                    ? "bg-accent text-primary-foreground"
+                    : "glass-card text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {galleryItems.map((item, i) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredItems.map((item, i) => {
             const isAfter = !!showAfter[item.id];
             return (
               <motion.div
