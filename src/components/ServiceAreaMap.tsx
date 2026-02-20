@@ -34,7 +34,7 @@ const ServiceAreaMap = () => {
 
       const keyIcon = L.divIcon({
         className: "custom-marker",
-        html: `<div style="filter:drop-shadow(0 0 6px rgba(227,27,35,0.6));font-size:24px;line-height:1;">🔑</div>`,
+        html: `<div style="filter:drop-shadow(0 0 6px rgba(59,130,246,0.6));font-size:24px;line-height:1;">🔑</div>`,
         iconSize: [24, 24],
         iconAnchor: [12, 12],
       });
