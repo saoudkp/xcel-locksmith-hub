@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import VehicleVerifier from "@/components/VehicleVerifier";
 import QuoteTool from "@/components/QuoteTool";
+import BeforeAfterGallery from "@/components/BeforeAfterGallery";
 import ReviewsSection from "@/components/ReviewsSection";
 import FAQSection from "@/components/FAQSection";
 import ServiceAreaMap from "@/components/ServiceAreaMap";
@@ -23,6 +24,7 @@ const Index = () => {
         <ServicesSection />
         <VehicleVerifier />
         <QuoteTool />
+        <BeforeAfterGallery />
         <ReviewsSection />
         <ServiceAreaMap />
         <FAQSection />
