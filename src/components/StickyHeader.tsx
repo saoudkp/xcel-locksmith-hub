@@ -24,6 +24,7 @@ const StickyHeader = () => {
 
   const navLinks = [
     { href: "#services", label: "Services" },
+    { href: "#gallery", label: "Gallery" },
     { href: "#vehicle-verifier", label: "Vehicle Check" },
     { href: "#quote", label: "Free Quote" },
     { href: "#reviews", label: "Reviews" },
