@@ -20,7 +20,7 @@ const HeroSection = () => {
         <HeroLockAnimation />
 
         {/* Cinematic overlay — dark gradient from bottom for text legibility */}
-        <div className="absolute inset-0 pointer-events-none" style={{ height: "300vh" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ height: "500vh" }}>
           <div className="sticky top-0 h-screen w-full">
             {/* Vignette + bottom gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
@@ -32,7 +32,7 @@ const HeroSection = () => {
         </div>
 
         {/* Hero content pinned at bottom of viewport */}
-        <div className="absolute inset-0 pointer-events-none" style={{ height: "300vh" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ height: "500vh" }}>
           <div className="sticky top-0 h-screen flex flex-col justify-end pointer-events-auto">
             <div className="container mx-auto px-4 relative z-10 pb-12">
               <HeroContentDesktop />
