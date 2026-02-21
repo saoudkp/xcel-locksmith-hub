@@ -6,11 +6,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FRAME_COUNT = 46;
 const FRAME_PATH = "/frames/ezgif-frame-";
-
-/** Pad number to 3 digits: 1 → "001" */
 const pad = (n: number) => String(n).padStart(3, "0");
 
-/** Total scroll height — enough to scrub all 46 frames comfortably */
 const SCROLL_HEIGHT = "250vh";
 
 const HeroLockAnimation = () => {
@@ -45,7 +42,7 @@ const HeroLockAnimation = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      // Cover-fit the image into the canvas
+      // Cover-fit the image
       const imgRatio = img.width / img.height;
       const canvasRatio = rect.width / rect.height;
       let drawW: number, drawH: number, dx: number, dy: number;
@@ -115,16 +112,10 @@ const HeroLockAnimation = () => {
       className="hidden md:block relative"
       style={{ height: SCROLL_HEIGHT }}
     >
-      {/* Sticky canvas — compressed height for cinematic ratio */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
         <canvas
           ref={canvasRef}
-          className="w-full"
-          style={{
-            height: "65vh",
-            maxWidth: "100vw",
-            borderRadius: "0",
-          }}
+          className="w-full h-full"
         />
       </div>
     </div>

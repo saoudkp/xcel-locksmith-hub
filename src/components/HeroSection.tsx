@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Phone, Shield, Clock, Star, Award, DollarSign } from "lucide-react";
+import { Phone, Shield, Clock, Star, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { defaultBrand } from "@/data/siteConfig";
 import HeroLockAnimation, { SCROLL_HEIGHT } from "./HeroLockAnimation";
@@ -17,19 +17,22 @@ const HeroSection = () => {
 
       {/* Desktop: GSAP scroll-scrub lock animation */}
       <div className="hidden md:block relative">
-        {/* The animation container */}
+        {/* The animation container — drives scroll */}
         <HeroLockAnimation />
 
-        {/* Overlay + content pinned on top of the sticky canvas */}
-        <div className="absolute inset-0 pointer-events-none" style={{ height: SCROLL_HEIGHT }}>
-          <div className="sticky top-0 h-screen w-full flex flex-col justify-end pointer-events-auto">
-            {/* Subtle gradient for text readability — only bottom area */}
-            <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-background via-background/50 to-transparent" />
-            <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background/40 to-transparent" />
+        {/* Overlay + content pinned on top */}
+        <div className="absolute inset-0" style={{ height: SCROLL_HEIGHT }}>
+          <div className="sticky top-0 h-screen w-full flex flex-col justify-end overflow-hidden">
+            {/* Bottom gradient for text readability */}
+            <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none z-[1]" />
+            {/* Top subtle gradient */}
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background/30 to-transparent pointer-events-none z-[1]" />
 
-            {/* Hero content — fades in via scroll */}
-            <div className="container mx-auto px-4 relative z-10 pb-10">
-              <HeroContentDesktop />
+            {/* Hero content — scroll-driven staggered reveal */}
+            <div className="relative z-[2] pb-10">
+              <div className="container mx-auto px-4">
+                <HeroContentDesktop />
+              </div>
             </div>
           </div>
         </div>
@@ -38,19 +41,17 @@ const HeroSection = () => {
   );
 };
 
-/** Desktop: cinematic bottom-aligned layout with scroll-driven fade */
+/** Desktop: cinematic bottom-aligned layout with staggered scroll reveal */
 const HeroContentDesktop = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Calculate progress within the hero section (0 to 1)
       const scrollY = window.scrollY;
       const windowH = window.innerHeight;
-      // Content fades in during first 30% of scroll, stays visible
-      const fadeIn = Math.min(1, scrollY / (windowH * 0.5));
-      setScrollProgress(fadeIn);
+      // Progress from 0 → 1 over the first 1.2 viewports of scroll
+      const p = Math.min(1, scrollY / (windowH * 1.2));
+      setProgress(p);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -58,25 +59,23 @@ const HeroContentDesktop = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const contentOpacity = scrollProgress;
-  const contentTranslateY = (1 - scrollProgress) * 40; // slides up 40px
+  // Stagger function: each element appears at a different threshold
+  const stagger = (index: number, total: number) => {
+    const start = (index / total) * 0.6; // stagger starts spread across 0–0.6 of progress
+    const localProgress = Math.max(0, Math.min(1, (progress - start) / 0.4));
+    return {
+      opacity: localProgress,
+      transform: `translateY(${(1 - localProgress) * 30}px)`,
+    };
+  };
 
   return (
-    <div
-      ref={containerRef}
-      className="max-w-7xl mx-auto"
-      style={{
-        opacity: contentOpacity,
-        transform: `translateY(${contentTranslateY}px)`,
-        transition: "opacity 0.1s ease-out, transform 0.1s ease-out",
-      }}
-    >
-      {/* Bottom row: headline left, CTA + prices right */}
+    <div className="max-w-7xl mx-auto">
       <div className="flex items-end justify-between gap-8">
         {/* Left: headline + subtitle */}
         <div className="max-w-2xl">
           {/* Trust badges */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4" style={stagger(0, 6)}>
             {[
               { icon: Clock, text: "24/7" },
               { icon: Shield, text: "Licensed" },
@@ -93,12 +92,18 @@ const HeroContentDesktop = () => {
             ))}
           </div>
 
-          <h1 className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-foreground drop-shadow-lg">
+          <h1
+            className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-foreground drop-shadow-lg"
+            style={stagger(1, 6)}
+          >
             Cleveland's Fastest<br />
             <span className="text-accent">24/7 Emergency</span> Locksmith
           </h1>
 
-          <p className="text-sm lg:text-base text-foreground/70 max-w-lg mt-3 leading-relaxed drop-shadow-sm">
+          <p
+            className="text-sm lg:text-base text-foreground/70 max-w-lg mt-3 leading-relaxed drop-shadow-sm"
+            style={stagger(2, 6)}
+          >
             Locked out? We handle residential, commercial & automotive emergencies.
             <strong className="text-foreground"> 20–30 min arrival.</strong>
           </p>
@@ -107,7 +112,10 @@ const HeroContentDesktop = () => {
         {/* Right: CTA stack */}
         <div className="flex flex-col items-end gap-3 shrink-0">
           {/* Response badge */}
-          <div className="flex items-center gap-3 bg-background/50 backdrop-blur-md px-4 py-2.5 rounded-xl border border-border/30">
+          <div
+            className="flex items-center gap-3 bg-background/50 backdrop-blur-md px-4 py-2.5 rounded-xl border border-border/30"
+            style={stagger(3, 6)}
+          >
             <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center">
               <Clock className="w-4 h-4 text-accent" />
             </div>
@@ -121,6 +129,7 @@ const HeroContentDesktop = () => {
           <a
             href={defaultBrand.phoneNumber}
             className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-7 py-3.5 rounded-xl w-full"
+            style={stagger(4, 6)}
           >
             <Phone className="w-5 h-5" />
             Call {defaultBrand.phoneDisplay}
@@ -128,12 +137,13 @@ const HeroContentDesktop = () => {
           <a
             href="#quote"
             className="touch-target flex items-center justify-center gap-2 bg-background/50 backdrop-blur-md hover:bg-background/70 text-foreground font-semibold px-7 py-3 rounded-xl transition-all border border-border/30 w-full text-center text-sm"
+            style={stagger(4, 6)}
           >
             Get a Free Quote
           </a>
 
           {/* Prices row */}
-          <div className="flex gap-2">
+          <div className="flex gap-2" style={stagger(5, 6)}>
             {[
               { label: "Residential", price: "$35" },
               { label: "Commercial", price: "$45" },
