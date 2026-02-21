@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Phone, Mail, Facebook, Instagram, MessageCircle } from "lucide-react";
+import { Phone, Mail, MessageCircle, Facebook, Instagram, Globe, Video, MapPin } from "lucide-react";
 import { defaultContact } from "@/data/siteConfig";
 
 const contacts = [
@@ -29,6 +29,12 @@ const contacts = [
 const socials = [
   { icon: Facebook, label: "Facebook", href: "https://facebook.com/xcellocksmith" },
   { icon: Instagram, label: "Instagram", href: "https://instagram.com/xcellocksmith" },
+  { icon: Video, label: "TikTok", href: "https://tiktok.com/@xcellocksmith" },
+  { icon: Globe, label: "YouTube", href: "https://youtube.com/@xcellocksmith" },
+  { icon: MapPin, label: "Google Business", href: "https://g.page/xcellocksmith" },
+  { icon: Globe, label: "Yelp", href: "https://yelp.com/biz/xcel-locksmith-cleveland" },
+  { icon: Globe, label: "Nextdoor", href: "https://nextdoor.com/pages/xcel-locksmith-cleveland-oh" },
+  { icon: Globe, label: "LinkedIn", href: "https://linkedin.com/company/xcellocksmith" },
 ];
 
 const ContactSection = () => {
@@ -77,21 +83,24 @@ const ContactSection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex items-center justify-center gap-4"
+          className="flex flex-col items-center gap-4"
         >
-          <span className="text-sm text-muted-foreground">Follow us:</span>
-          {socials.map(({ icon: Icon, label, href }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Follow Xcel Locksmith on ${label}`}
-              className="p-3 neu-card rounded-xl text-muted-foreground hover:text-accent transition-colors hover:scale-110 duration-200"
-            >
-              <Icon className="w-5 h-5" />
-            </a>
-          ))}
+          <span className="text-sm text-muted-foreground font-medium">Follow us on social media:</span>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {socials.map(({ icon: Icon, label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Follow Xcel Locksmith on ${label}`}
+                className="p-3 neu-card rounded-xl text-muted-foreground hover:text-accent transition-colors hover:scale-110 duration-200 flex items-center gap-2"
+              >
+                <Icon className="w-5 h-5" />
+                <span className="text-xs font-medium hidden sm:inline">{label}</span>
+              </a>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

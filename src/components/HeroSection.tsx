@@ -49,17 +49,10 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-display font-extrabold tracking-tight mb-6 leading-[1.1]"
+            className="font-display font-extrabold tracking-tight mb-6 leading-[1.15] text-4xl sm:text-5xl md:text-6xl text-foreground"
           >
-            <span className="block text-4xl sm:text-5xl md:text-6xl text-foreground">
-              Cleveland's Fastest
-            </span>
-            <span className="block text-4xl sm:text-5xl md:text-7xl text-gradient-metallic mt-1">
-              24/7 Emergency
-            </span>
-            <span className="block text-4xl sm:text-5xl md:text-6xl text-accent mt-1">
-              Locksmith
-            </span>
+            Cleveland's Fastest<br />
+            24/7 Emergency Locksmith
           </motion.h1>
 
           {/* Subheadline */}
