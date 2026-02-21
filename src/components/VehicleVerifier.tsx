@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Car, CheckCircle, AlertCircle } from "lucide-react";
+import { Car, CheckCircle, AlertCircle, KeyRound } from "lucide-react";
 import { vehicleMakes, VehicleMake, VehicleModel } from "@/data/vehicles";
 
 const VehicleVerifier = () => {
@@ -27,7 +27,10 @@ const VehicleVerifier = () => {
         <div className="max-w-2xl mx-auto glass-card rounded-2xl p-8">
           {/* Make Selection with Logos */}
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-foreground mb-3">Select Vehicle Make</label>
+            <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-3">
+              <KeyRound className="w-5 h-5 text-accent" />
+              Select Vehicle Make
+            </label>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               {vehicleMakes.map((make) => (
                 <button
@@ -39,23 +42,21 @@ const VehicleVerifier = () => {
                       : "glass-card border-border hover:bg-secondary text-foreground hover:border-accent/30"
                   }`}
                 >
-                  {/* Logo placeholder — admin can replace via backend upload */}
-                  <div className="w-10 h-10 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1">
                     {make.logoUrl ? (
                       <img
                         src={make.logoUrl}
                         alt={`${make.name} logo`}
-                        className="w-8 h-8 object-contain"
+                        className="w-12 h-12 object-contain"
                         loading="lazy"
                         onError={(e) => {
-                          // Fallback to text initial if logo fails
                           const target = e.currentTarget;
                           target.style.display = "none";
-                          target.parentElement!.innerHTML = `<span class="font-display font-bold text-lg text-accent">${make.name.charAt(0)}</span>`;
+                          target.parentElement!.innerHTML = `<span class="font-display font-bold text-xl text-accent">${make.name.charAt(0)}</span>`;
                         }}
                       />
                     ) : (
-                      <span className="font-display font-bold text-lg text-accent">
+                      <span className="font-display font-bold text-xl text-accent">
                         {make.name.charAt(0)}
                       </span>
                     )}
@@ -109,11 +110,11 @@ const VehicleVerifier = () => {
                 <div className="flex items-center gap-3 mb-4">
                   {/* Show brand logo in results */}
                   {selectedMake?.logoUrl ? (
-                    <div className="w-10 h-10 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1">
                       <img
                         src={selectedMake.logoUrl}
                         alt={selectedMake.name}
-                        className="w-8 h-8 object-contain"
+                        className="w-10 h-10 object-contain"
                         onError={(e) => {
                           const target = e.currentTarget;
                           target.style.display = "none";
