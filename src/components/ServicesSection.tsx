@@ -31,7 +31,7 @@ const ServiceCarousel = ({ category }: { category: ServiceCategory }) => {
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl skeu-badge flex items-center justify-center">
             <config.icon className="w-6 h-6 text-accent" />
           </div>
           <div>
@@ -42,14 +42,14 @@ const ServiceCarousel = ({ category }: { category: ServiceCategory }) => {
         <div className="flex items-center gap-2">
           <button
             onClick={scrollPrev}
-            className="p-2 rounded-lg glass-card hover:bg-foreground/5 transition-colors"
+            className="p-2 rounded-lg neu-card hover:bg-foreground/5 transition-colors"
             aria-label="Previous"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={scrollNext}
-            className="p-2 rounded-lg glass-card hover:bg-foreground/5 transition-colors"
+            className="p-2 rounded-lg neu-card hover:bg-foreground/5 transition-colors"
             aria-label="Next"
           >
             <ChevronRight className="w-5 h-5" />
@@ -64,7 +64,7 @@ const ServiceCarousel = ({ category }: { category: ServiceCategory }) => {
               key={service.id}
               className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0"
             >
-              <div className="glass-card rounded-xl p-5 h-full hover:bg-foreground/5 transition-all group cursor-default">
+              <div className="neu-card rounded-xl p-5 h-full hover:bg-foreground/5 transition-all group cursor-default">
                 <div className="flex flex-col gap-3">
                   <h4 className="font-semibold text-foreground group-hover:text-accent transition-colors">
                     {service.title}
@@ -97,7 +97,7 @@ const ServicesSection = () => {
           className="text-center mb-16"
         >
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Complete Locksmith <span className="text-accent">Services</span>
+            Complete Locksmith <span className="font-serif-accent text-accent">Services</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             29 professional locksmith services across residential, commercial & automotive —

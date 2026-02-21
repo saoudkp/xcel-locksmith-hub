@@ -17,14 +17,14 @@ const VehicleVerifier = () => {
           className="text-center mb-12"
         >
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Vehicle <span className="text-accent">Compatibility</span> Check
+            Vehicle <span className="font-serif-accent text-accent">Compatibility</span> Check
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Select your vehicle make and model to verify which automotive locksmith services we support.
           </p>
         </motion.div>
 
-        <div className="max-w-2xl mx-auto glass-card rounded-2xl p-8">
+        <div className="max-w-2xl mx-auto neu-card rounded-2xl p-8">
           {/* Make Selection with Logos */}
           <div className="mb-6">
             <label className="flex items-center gap-2 text-sm font-semibold text-foreground mb-3">
@@ -36,13 +36,13 @@ const VehicleVerifier = () => {
                 <button
                   key={make.id}
                   onClick={() => { setSelectedMake(make); setSelectedModel(null); }}
-                  className={`flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-sm font-medium transition-all border ${
+                  className={`flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-sm font-medium transition-all ${
                     selectedMake?.id === make.id
-                      ? "bg-accent/10 text-accent border-accent shadow-sm shadow-accent/10"
-                      : "glass-card border-border hover:bg-secondary text-foreground hover:border-accent/30"
+                      ? "neu-card-pressed text-accent"
+                      : "neu-card hover:bg-secondary text-foreground"
                   }`}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1">
+                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1 shadow-sm">
                     {make.logoUrl ? (
                       <img
                         src={make.logoUrl}
@@ -84,10 +84,10 @@ const VehicleVerifier = () => {
                     <button
                       key={model.id}
                       onClick={() => setSelectedModel(model)}
-                      className={`touch-target px-3 py-3 rounded-lg text-sm font-medium transition-all border ${
+                      className={`touch-target px-3 py-3 rounded-lg text-sm font-medium transition-all ${
                         selectedModel?.id === model.id
-                          ? "bg-accent text-accent-foreground border-accent"
-                          : "glass-card border-border hover:bg-secondary text-foreground"
+                          ? "skeu-button text-white"
+                          : "neu-card hover:bg-secondary text-foreground"
                       }`}
                     >
                       {model.name}
@@ -108,9 +108,8 @@ const VehicleVerifier = () => {
                 className="glass-card rounded-xl p-6 border border-accent/20"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  {/* Show brand logo in results */}
                   {selectedMake?.logoUrl ? (
-                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1">
+                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center overflow-hidden p-1 shadow-sm">
                       <img
                         src={selectedMake.logoUrl}
                         alt={selectedMake.name}

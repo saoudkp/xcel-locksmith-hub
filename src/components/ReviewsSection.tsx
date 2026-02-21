@@ -39,7 +39,7 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: index * 0.1 }}
-    className="glass-card rounded-xl p-6 relative group hover:border-accent/30 transition-colors duration-300"
+    className="neu-card rounded-xl p-6 relative group hover:shadow-lg transition-all duration-300"
   >
     {/* Decorative lock watermark */}
     <Lock className="absolute top-4 right-4 w-12 h-12 text-accent/5 group-hover:text-accent/10 transition-colors" />
@@ -57,7 +57,7 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => (
     </div>
 
     <div className="flex items-center gap-2 pt-3 border-t border-border/50">
-      <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full skeu-badge flex items-center justify-center">
         <span className="text-accent font-display font-bold text-sm">
           {review.customerName.charAt(0)}
         </span>
@@ -107,7 +107,7 @@ const AddReviewForm = ({ onClose, onSubmit }: {
         animate={{ scale: 1, opacity: 1, rotateY: 0 }}
         exit={{ scale: 0.9, opacity: 0, rotateY: 10 }}
         transition={{ type: "spring", damping: 20 }}
-        className="glass-card-strong rounded-2xl p-6 md:p-8 max-w-md w-full relative overflow-hidden"
+        className="neu-card rounded-2xl p-6 md:p-8 max-w-md w-full relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Background lock decoration */}
@@ -132,9 +132,8 @@ const AddReviewForm = ({ onClose, onSubmit }: {
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative z-10"
             >
-              {/* Header with lock icon */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl skeu-badge flex items-center justify-center">
                   <Lock className="w-6 h-6 text-accent" />
                 </div>
                 <div>
@@ -143,25 +142,21 @@ const AddReviewForm = ({ onClose, onSubmit }: {
                 </div>
               </div>
 
-              {/* Name */}
               <div className="mb-4">
                 <label className="text-sm font-medium text-foreground mb-1.5 block">Your Name</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    maxLength={100}
-                    placeholder="e.g. John D."
-                    className="w-full rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                  />
-                </div>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={100}
+                  placeholder="e.g. John D."
+                  className="w-full rounded-lg neu-input px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                />
               </div>
 
-              {/* Key Rating */}
               <div className="mb-4">
                 <label className="text-sm font-medium text-foreground mb-2 block">Your Rating</label>
-                <div className="glass-card rounded-lg p-3 flex items-center justify-between">
+                <div className="neu-card-pressed rounded-lg p-3 flex items-center justify-between">
                   <KeyRating rating={rating} size={24} interactive onChange={setRating} />
                   <span className="text-xs text-muted-foreground">
                     {rating === 0 ? "Tap a key" : `${rating}/5 keys`}
@@ -169,7 +164,6 @@ const AddReviewForm = ({ onClose, onSubmit }: {
                 </div>
               </div>
 
-              {/* Review text */}
               <div className="mb-6">
                 <label className="text-sm font-medium text-foreground mb-1.5 block">Your Experience</label>
                 <textarea
@@ -178,12 +172,11 @@ const AddReviewForm = ({ onClose, onSubmit }: {
                   maxLength={500}
                   rows={3}
                   placeholder="Tell us about your locksmith experience..."
-                  className="w-full rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all resize-none"
+                  className="w-full rounded-lg neu-input px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none resize-none"
                 />
                 <span className="text-xs text-muted-foreground float-right mt-1">{text.length}/500</span>
               </div>
 
-              {/* Submit */}
               <motion.button
                 type="submit"
                 disabled={!isValid}
@@ -191,7 +184,7 @@ const AddReviewForm = ({ onClose, onSubmit }: {
                 whileTap={isValid ? { scale: 0.98 } : {}}
                 className={`w-full rounded-xl py-3 font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
                   isValid
-                    ? "bg-accent text-accent-foreground shadow-lg shadow-accent/25 hover:shadow-accent/40"
+                    ? "skeu-button text-white"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
               >
@@ -220,7 +213,7 @@ const AddReviewForm = ({ onClose, onSubmit }: {
               </p>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:shadow-lg hover:shadow-accent/25 transition-all"
+                className="px-6 py-2.5 rounded-xl skeu-button text-white font-semibold text-sm"
               >
                 Done
               </button>
@@ -255,13 +248,12 @@ const ReviewsSection = () => {
           className="text-center mb-12"
         >
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            What Our <span className="text-accent">Customers</span> Say
+            What Our <span className="font-serif-accent text-accent">Customers</span> Say
           </h2>
           <p className="text-muted-foreground mb-6">Real reviews from real Cleveland area customers</p>
 
-          {/* Stats bar */}
           <div className="flex items-center justify-center gap-6 flex-wrap">
-            <div className="glass-card rounded-xl px-5 py-3 flex items-center gap-3">
+            <div className="neu-card rounded-xl px-5 py-3 flex items-center gap-3">
               <span className="font-display text-2xl font-bold text-accent">{avgRating}</span>
               <div className="text-left">
                 <KeyRating rating={Math.round(Number(avgRating))} size={14} />
@@ -273,9 +265,9 @@ const ReviewsSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowForm(true)}
-              className="glass-card rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-semibold text-foreground hover:text-accent hover:border-accent/30 transition-all group"
+              className="neu-card rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-semibold text-foreground hover:text-accent transition-all group"
             >
-              <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+              <div className="w-8 h-8 rounded-lg skeu-badge flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                 <KeyRound className="w-4 h-4 text-accent" />
               </div>
               Leave a Review
@@ -290,7 +282,6 @@ const ReviewsSection = () => {
         </div>
       </div>
 
-      {/* Add Review Form Popup */}
       <AnimatePresence>
         {showForm && (
           <AddReviewForm

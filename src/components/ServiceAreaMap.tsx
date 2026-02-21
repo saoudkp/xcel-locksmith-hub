@@ -14,7 +14,6 @@ const ServiceAreaMap = () => {
     const initMap = async () => {
       const L = (await import("leaflet")).default;
 
-      // Fix default marker icons
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
@@ -64,20 +63,20 @@ const ServiceAreaMap = () => {
       <div className="container mx-auto px-4 relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Our <span className="text-accent">Service Area</span>
+            Our <span className="font-serif-accent text-accent">Service Area</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Serving Cleveland and 24 surrounding communities with fast 20–30 minute response times.
           </p>
         </motion.div>
 
-        <div className="glass-card-strong rounded-2xl overflow-hidden">
+        <div className="neu-card rounded-2xl overflow-hidden">
           <div ref={mapRef} className="w-full h-[400px] md:h-[500px]" />
         </div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-2">
           {activeLocations.map((loc) => (
-            <span key={loc.id} className="glass-card px-3 py-1.5 rounded-full text-xs text-silver-light">
+            <span key={loc.id} className="skeu-badge px-3 py-1.5 rounded-full text-xs text-foreground font-medium">
               {loc.cityName}
             </span>
           ))}

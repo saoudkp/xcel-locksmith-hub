@@ -60,7 +60,7 @@ const CategoryCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="glass-card rounded-xl overflow-hidden group cursor-pointer"
+      className="neu-card rounded-xl overflow-hidden group cursor-pointer"
       onClick={() => onCategoryClick(category)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -83,7 +83,6 @@ const CategoryCard = ({
           </motion.div>
         </AnimatePresence>
 
-        {/* Expand icon */}
         <div className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-background/60 backdrop-blur-sm text-foreground opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
           <Maximize2 className="w-4 h-4" />
         </div>
@@ -109,7 +108,6 @@ const CategoryCard = ({
           {items.length} projects · Click to view all
         </p>
 
-        {/* Dots indicator */}
         <div className="flex gap-1.5 mt-3">
           {items.map((_, i) => (
             <div
@@ -143,7 +141,7 @@ const BeforeAfterGallery = () => {
           className="text-center mb-12"
         >
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Before & After Gallery
+            Before & After <span className="font-serif-accent text-accent">Gallery</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Browse our work across residential, automotive & commercial locksmithing.
@@ -151,7 +149,6 @@ const BeforeAfterGallery = () => {
           </p>
         </motion.div>
 
-        {/* 3 Category Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {categories.map((cat) => (
             <CategoryCard

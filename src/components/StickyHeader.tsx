@@ -27,7 +27,7 @@ const StickyHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Emergency banner - mobile */}
-      <div className="bg-cta-red text-white text-center py-1.5 px-4 text-sm font-semibold flex items-center justify-center gap-2 md:hidden">
+      <div className="skeu-cta-red text-white text-center py-1.5 px-4 text-sm font-semibold flex items-center justify-center gap-2 md:hidden">
         <Zap className="w-4 h-4" />
         <span>We Arrive in 20–30 Minutes!</span>
       </div>
@@ -57,18 +57,18 @@ const StickyHeader = () => {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setDark(!dark)}
-              className="p-2 rounded-lg glass-card hover:bg-foreground/5 transition-colors"
+              className="p-2 rounded-lg neu-card hover:bg-foreground/5 transition-colors"
               aria-label="Toggle theme"
             >
               {dark ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-foreground" />}
             </button>
-            <div className="glass-card rounded-full px-4 py-2 flex items-center gap-2 text-accent font-semibold text-sm">
+            <div className="skeu-badge rounded-full px-4 py-2 flex items-center gap-2 text-accent font-semibold text-sm">
               <Clock className="w-4 h-4 animate-pulse" />
               <span>20–30 Min</span>
             </div>
             <a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center gap-2 bg-cta-red hover:bg-cta-red-glow text-white font-bold px-6 py-3 rounded-xl transition-all animate-pulse-glow-red hover:scale-105 duration-300"
+              className="touch-target flex items-center gap-2 skeu-cta-red text-white font-bold px-6 py-3 rounded-xl hover:scale-105 duration-300"
             >
               <Phone className="w-5 h-5" />
               <span>Call Now</span>
@@ -79,21 +79,21 @@ const StickyHeader = () => {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setDark(!dark)}
-              className="p-2 rounded-lg glass-card"
+              className="p-2 rounded-lg neu-card"
               aria-label="Toggle theme"
             >
               {dark ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-foreground" />}
             </button>
             <a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center gap-2 bg-cta-red hover:bg-cta-red-glow text-white font-bold px-4 py-3 rounded-xl animate-pulse-glow-red text-sm"
+              className="touch-target flex items-center gap-2 skeu-cta-red text-white font-bold px-4 py-3 rounded-xl text-sm"
             >
               <Phone className="w-5 h-5" />
               <span>Call Now</span>
             </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="touch-target flex items-center justify-center p-2 text-foreground glass-card rounded-lg"
+              className="touch-target flex items-center justify-center p-2 text-foreground neu-card rounded-lg"
               aria-label="Toggle menu"
             >
               {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

@@ -26,7 +26,6 @@ const VisitorCounter = () => {
     localStorage.setItem("xcel-visitor-today", String(daily));
     localStorage.setItem("xcel-visitor-date", today);
 
-    // Animate count up
     let current = 0;
     const step = Math.ceil(total / 60);
     const timer = setInterval(() => {
@@ -51,23 +50,23 @@ const VisitorCounter = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap justify-center gap-6">
-          <div className="glass-card-strong rounded-2xl px-8 py-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="neu-card rounded-2xl px-8 py-6 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full skeu-badge flex items-center justify-center">
               <Users className="w-6 h-6 text-accent" />
             </div>
             <div>
               <p className="font-display text-3xl font-bold text-foreground">{count.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">Total Visitors</p>
+              <p className="text-sm text-muted-foreground font-medium">Total Visitors</p>
             </div>
           </div>
 
-          <div className="glass-card-strong rounded-2xl px-8 py-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="neu-card rounded-2xl px-8 py-6 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full skeu-badge flex items-center justify-center">
               <Eye className="w-6 h-6 text-accent" />
             </div>
             <div>
               <p className="font-display text-3xl font-bold text-foreground">{todayCount}</p>
-              <p className="text-sm text-muted-foreground">Visitors Today</p>
+              <p className="text-sm text-muted-foreground font-medium">Visitors Today</p>
             </div>
           </div>
         </div>
