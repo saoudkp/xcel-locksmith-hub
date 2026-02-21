@@ -1,6 +1,8 @@
 import StickyHeader from "@/components/StickyHeader";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
+import TeamSection from "@/components/TeamSection";
+import ContactSection from "@/components/ContactSection";
 import VehicleVerifier from "@/components/VehicleVerifier";
 import QuoteTool from "@/components/QuoteTool";
 import BeforeAfterGallery from "@/components/BeforeAfterGallery";
@@ -10,13 +12,15 @@ import ServiceAreaMap from "@/components/ServiceAreaMap";
 import VisitorCounter from "@/components/VisitorCounter";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
-import { LocalBusinessSchema, FAQSchema } from "@/components/StructuredData";
+import { LocalBusinessSchema, FAQSchema, TeamSchema } from "@/components/StructuredData";
 import { getActiveSections, type SectionConfig } from "@/data/siteConfig";
 
 /** Maps section type to its component — layout/theme stays constant */
 const sectionComponents: Record<SectionConfig["type"], React.ComponentType> = {
   hero: HeroSection,
   services: ServicesSection,
+  team: TeamSection,
+  contact: ContactSection,
   "vehicle-verifier": VehicleVerifier,
   quote: QuoteTool,
   gallery: BeforeAfterGallery,
@@ -36,6 +40,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-page">
       <LocalBusinessSchema />
       <FAQSchema />
+      <TeamSchema />
 
       <StickyHeader />
 
