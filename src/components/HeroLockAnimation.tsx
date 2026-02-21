@@ -10,6 +10,9 @@ const FRAME_PATH = "/frames/ezgif-frame-";
 /** Pad number to 3 digits: 1 → "001" */
 const pad = (n: number) => String(n).padStart(3, "0");
 
+/** Total scroll height — enough to scrub all 46 frames comfortably */
+const SCROLL_HEIGHT = "250vh";
+
 const HeroLockAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,7 +27,6 @@ const HeroLockAnimation = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Preload all frames
     const images: HTMLImageElement[] = [];
     let loadedCount = 0;
 
@@ -43,7 +45,7 @@ const HeroLockAnimation = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      // Cover-fit the image
+      // Cover-fit the image into the canvas
       const imgRatio = img.width / img.height;
       const canvasRatio = rect.width / rect.height;
       let drawW: number, drawH: number, dx: number, dy: number;
@@ -78,7 +80,6 @@ const HeroLockAnimation = () => {
     imagesRef.current = images;
 
     const setupScrollTrigger = () => {
-      // Animate from frame 0 → 45 based on scroll
       const obj = { frame: 0 };
 
       gsap.to(obj, {
@@ -89,7 +90,7 @@ const HeroLockAnimation = () => {
           trigger: container,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.5,
+          scrub: 0.3,
         },
         onUpdate: () => {
           const frameIndex = Math.round(obj.frame);
@@ -111,18 +112,24 @@ const HeroLockAnimation = () => {
   return (
     <div
       ref={containerRef}
-      className="hidden md:block"
-      style={{ height: "350vh" }}
+      className="hidden md:block relative"
+      style={{ height: SCROLL_HEIGHT }}
     >
+      {/* Sticky canvas — compressed height for cinematic ratio */}
       <div className="sticky top-0 h-screen w-full flex items-center justify-center">
         <canvas
           ref={canvasRef}
-          className="w-full h-full"
-          style={{ maxWidth: "100vw", maxHeight: "100vh" }}
+          className="w-full"
+          style={{
+            height: "65vh",
+            maxWidth: "100vw",
+            borderRadius: "0",
+          }}
         />
       </div>
     </div>
   );
 };
 
+export { SCROLL_HEIGHT };
 export default HeroLockAnimation;
