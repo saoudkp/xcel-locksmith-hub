@@ -34,10 +34,10 @@ const StickyHeader = () => {
 
       {/* Main header with glass */}
       <div className="glass-header">
-        <div className="container mx-auto px-4 flex items-center justify-between h-16 md:h-20">
+        <div className="container mx-auto px-4 flex items-center justify-between h-20 md:h-24">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
-            <img src={logo} alt="Xcel Locksmith" className="h-12 md:h-16 w-auto transition-transform duration-300 group-hover:scale-105" />
+            <img src={logo} alt="Xcel Locksmith" className="h-16 md:h-20 w-auto transition-transform duration-300 group-hover:scale-105" />
           </Link>
 
           {/* Desktop nav */}
