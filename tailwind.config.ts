@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Oswald", "sans-serif"],
-        sans: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
+        display: ["Sora", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        serif: ["DM Serif Display", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

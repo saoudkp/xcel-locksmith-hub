@@ -18,7 +18,7 @@ const QuoteTool = () => {
   const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = () => {
-    if (honeypot) return; // bot detected
+    if (honeypot) return;
     if (!name.trim()) { toast({ title: "Name required", description: "Please enter your name.", variant: "destructive" }); return; }
     if (!phone.trim()) { toast({ title: "Phone required", description: "Please enter your phone number.", variant: "destructive" }); return; }
     setSubmitted(true);
@@ -29,11 +29,11 @@ const QuoteTool = () => {
     return (
       <section id="quote" className="py-20">
         <div className="container mx-auto px-4">
-          <div className="max-w-lg mx-auto glass-card rounded-2xl p-8 text-center">
+          <div className="max-w-lg mx-auto neu-card rounded-2xl p-8 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h3 className="font-display text-2xl font-bold mb-2">Quote Request Received!</h3>
             <p className="text-muted-foreground mb-6">Our team will call you within minutes to discuss your needs and provide an exact quote.</p>
-            <a href="tel:+12165551234" className="touch-target inline-flex items-center gap-2 bg-accent text-accent-foreground font-bold px-6 py-3 rounded-xl">
+            <a href="tel:+12165551234" className="touch-target inline-flex items-center gap-2 skeu-button text-white font-bold px-6 py-3 rounded-xl">
               <Phone className="w-5 h-5" /> Can't Wait? Call Now
             </a>
           </div>
@@ -47,14 +47,14 @@ const QuoteTool = () => {
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Get a <span className="text-accent">Free Quote</span> in Seconds
+            Get a <span className="font-serif-accent text-accent">Free Quote</span> in Seconds
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Tell us what you need and we'll give you an upfront price — no surprises, no hidden fees.
           </p>
         </motion.div>
 
-        <div className="max-w-lg mx-auto glass-card rounded-2xl p-8">
+        <div className="max-w-lg mx-auto neu-card rounded-2xl p-8">
           {/* Progress */}
           <div className="flex items-center gap-2 mb-8">
             {[1, 2, 3, 4].map((s) => (
@@ -78,11 +78,13 @@ const QuoteTool = () => {
                     <button
                       key={opt.type}
                       onClick={() => { setServiceType(opt.type); setStep(2); }}
-                      className={`touch-target w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
-                        serviceType === opt.type ? "border-accent bg-accent/10" : "border-border hover:bg-secondary"
+                      className={`touch-target w-full flex items-center gap-4 p-4 rounded-xl transition-all text-left ${
+                        serviceType === opt.type ? "neu-card-pressed border-accent bg-accent/5" : "neu-card hover:bg-secondary"
                       }`}
                     >
-                      <opt.icon className="w-8 h-8 text-accent shrink-0" />
+                      <div className="w-10 h-10 rounded-lg skeu-badge flex items-center justify-center">
+                        <opt.icon className="w-5 h-5 text-accent" />
+                      </div>
                       <div className="flex-1">
                         <p className="font-semibold text-foreground">{opt.label}</p>
                         <p className="text-sm text-muted-foreground">{opt.desc}</p>
@@ -102,11 +104,11 @@ const QuoteTool = () => {
                   value={location}
                   onChange={e => setLocation(e.target.value)}
                   placeholder="City or address in Cleveland area"
-                  className="touch-target w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-accent focus:border-accent outline-none"
+                  className="touch-target w-full neu-input rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground outline-none"
                 />
                 <div className="flex gap-3 mt-6">
-                  <button onClick={() => setStep(1)} className="touch-target px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
-                  <button onClick={() => setStep(3)} className="touch-target flex-1 bg-accent text-accent-foreground font-bold px-6 py-3 rounded-xl hover:bg-red-glow transition-colors">Next</button>
+                  <button onClick={() => setStep(1)} className="touch-target px-6 py-3 rounded-xl neu-card text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
+                  <button onClick={() => setStep(3)} className="touch-target flex-1 skeu-button text-white font-bold px-6 py-3 rounded-xl">Next</button>
                 </div>
               </motion.div>
             )}
@@ -114,14 +116,14 @@ const QuoteTool = () => {
             {step === 3 && (
               <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                 <h3 className="font-display text-xl font-bold mb-4">Upload a photo (optional)</h3>
-                <label className="touch-target flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-secondary transition-colors">
+                <label className="touch-target flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer neu-card-pressed hover:bg-secondary/50 transition-colors">
                   <Camera className="w-8 h-8 text-muted-foreground mb-2" />
                   <span className="text-sm text-muted-foreground">{photo ? photo.name : "Tap to upload a photo of your lock or key"}</span>
                   <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={e => setPhoto(e.target.files?.[0] || null)} />
                 </label>
                 <div className="flex gap-3 mt-6">
-                  <button onClick={() => setStep(2)} className="touch-target px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
-                  <button onClick={() => setStep(4)} className="touch-target flex-1 bg-accent text-accent-foreground font-bold px-6 py-3 rounded-xl hover:bg-red-glow transition-colors">Next</button>
+                  <button onClick={() => setStep(2)} className="touch-target px-6 py-3 rounded-xl neu-card text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
+                  <button onClick={() => setStep(4)} className="touch-target flex-1 skeu-button text-white font-bold px-6 py-3 rounded-xl">Next</button>
                 </div>
               </motion.div>
             )}
@@ -135,19 +137,19 @@ const QuoteTool = () => {
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Your name *"
-                    className="touch-target w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-accent focus:border-accent outline-none"
+                    className="touch-target w-full neu-input rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground outline-none"
                   />
                   <input
                     type="tel"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
                     placeholder="Phone number *"
-                    className="touch-target w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-accent focus:border-accent outline-none"
+                    className="touch-target w-full neu-input rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground outline-none"
                   />
                 </div>
                 <div className="flex gap-3 mt-6">
-                  <button onClick={() => setStep(3)} className="touch-target px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
-                  <button onClick={handleSubmit} className="touch-target flex-1 flex items-center justify-center gap-2 bg-accent text-accent-foreground font-bold px-6 py-3 rounded-xl hover:bg-red-glow transition-colors">
+                  <button onClick={() => setStep(3)} className="touch-target px-6 py-3 rounded-xl neu-card text-foreground font-medium hover:bg-secondary transition-colors">Back</button>
+                  <button onClick={handleSubmit} className="touch-target flex-1 flex items-center justify-center gap-2 skeu-cta-red text-white font-bold px-6 py-3 rounded-xl">
                     <Send className="w-5 h-5" /> Submit Quote Request
                   </button>
                 </div>

@@ -11,7 +11,7 @@ const FAQSection = () => {
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Frequently Asked <span className="text-accent">Questions</span>
+            Frequently Asked <span className="font-serif-accent text-accent">Questions</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Get answers to the most common locksmith questions. Still have questions? Call us 24/7.
@@ -26,7 +26,7 @@ const FAQSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="glass-card rounded-xl overflow-hidden"
+              className={`rounded-xl overflow-hidden transition-all ${openId === faq.id ? "neu-card-pressed" : "neu-card"}`}
             >
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}

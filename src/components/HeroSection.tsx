@@ -43,7 +43,7 @@ const HeroSection = () => {
               { icon: DollarSign, text: "No Hidden Fees" },
               { icon: Award, text: "Ohio Licensed" },
             ].map((badge, i) => (
-              <div key={i} className="glass-card px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium text-silver-light">
+              <div key={i} className="skeu-badge px-4 py-2 rounded-full flex items-center gap-2 text-sm font-semibold text-foreground">
                 <badge.icon className="w-4 h-4 text-accent" />
                 {badge.text}
               </div>
@@ -55,11 +55,13 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-display text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-6"
           >
             <span className="text-foreground">Cleveland's Fastest</span>
             <br />
-            <span className="text-accent">24/7 Emergency Locksmith</span>
+            <span className="text-gradient-metallic font-serif-accent text-5xl sm:text-6xl md:text-8xl">24/7 Emergency</span>
+            <br />
+            <span className="text-accent">Locksmith</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -67,28 +69,30 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
           >
             Locked out? Keys lost? Need new locks? We handle residential, commercial & automotive
             locksmith emergencies across Cleveland and 24 surrounding cities.
             <strong className="text-foreground"> We arrive in 20–30 minutes.</strong>
           </motion.p>
 
-          {/* Response time guarantee */}
+          {/* Response time guarantee - neumorphic */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="inline-flex items-center gap-3 glass-card px-6 py-4 rounded-2xl mb-8 glow-blue"
+            className="inline-flex items-center gap-3 neu-card px-6 py-4 rounded-2xl mb-8"
           >
-            <Clock className="w-8 h-8 text-accent" />
+            <div className="w-12 h-12 rounded-full bg-accent/15 flex items-center justify-center">
+              <Clock className="w-7 h-7 text-accent" />
+            </div>
             <div className="text-left">
               <p className="text-accent font-display text-2xl font-bold">20–30 Minute Response</p>
               <p className="text-sm text-muted-foreground">Guaranteed fast arrival, any time, any day</p>
             </div>
           </motion.div>
 
-          {/* CTA buttons */}
+          {/* CTA buttons - skeuomorphic */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -97,20 +101,20 @@ const HeroSection = () => {
           >
             <a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center justify-center gap-3 bg-cta-red hover:bg-cta-red-glow text-white font-bold text-lg px-8 py-4 rounded-xl transition-all animate-pulse-glow-red"
+              className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-lg px-8 py-4 rounded-xl"
             >
               <Phone className="w-6 h-6" />
               Call (216) 555-1234 Now
             </a>
             <a
               href="#quote"
-              className="touch-target flex items-center justify-center gap-2 glass-card hover:bg-secondary text-foreground font-semibold text-lg px-8 py-4 rounded-xl transition-all border border-border"
+              className="touch-target flex items-center justify-center gap-2 neu-card hover:bg-secondary text-foreground font-semibold text-lg px-8 py-4 rounded-xl transition-all"
             >
               Get a Free Quote
             </a>
           </motion.div>
 
-          {/* Starting prices row */}
+          {/* Starting prices row - neumorphic */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -122,9 +126,9 @@ const HeroSection = () => {
               { label: "Commercial", price: "$45" },
               { label: "Automotive", price: "$50" },
             ].map((item, i) => (
-              <div key={i} className="glass-card rounded-xl p-4 text-center">
+              <div key={i} className="neu-card rounded-xl p-4 text-center">
                 <p className="text-accent font-display text-2xl font-bold">{item.price}+</p>
-                <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
+                <p className="text-xs text-muted-foreground mt-1 font-medium">{item.label}</p>
               </div>
             ))}
           </motion.div>
