@@ -1,6 +1,7 @@
 export interface VehicleMake {
   id: string;
   name: string;
+  logoUrl: string; // Admin-uploadable via backend later
   models: VehicleModel[];
 }
 
@@ -22,10 +23,31 @@ const allAutoServices = [
   "Automotive Lock Rekeying",
 ];
 
+/** Logo CDN base — uses car-logos-dataset from GitHub */
+const logoBase = "https://www.carlogos.org/car-logos";
+
+const BRAND_LOGOS: Record<string, string> = {
+  Chevrolet: `${logoBase}/chevrolet-logo.png`,
+  GMC: `${logoBase}/gmc-logo.png`,
+  Cadillac: `${logoBase}/cadillac-logo.png`,
+  Buick: `${logoBase}/buick-logo.png`,
+  Ford: `${logoBase}/ford-logo.png`,
+  Lincoln: `${logoBase}/lincoln-logo.png`,
+  Chrysler: `${logoBase}/chrysler-logo.png`,
+  Dodge: `${logoBase}/dodge-logo.png`,
+  Jeep: `${logoBase}/jeep-logo.png`,
+  Ram: `${logoBase}/ram-logo.png`,
+};
+
 const makeModels = (name: string, models: string[]): VehicleMake => ({
   id: name.toLowerCase().replace(/\s/g, "-"),
   name,
-  models: models.map(m => ({ id: `${name.toLowerCase()}-${m.toLowerCase().replace(/\s/g, "-")}`, name: m, supportedServices: allAutoServices })),
+  logoUrl: BRAND_LOGOS[name] || "",
+  models: models.map(m => ({
+    id: `${name.toLowerCase()}-${m.toLowerCase().replace(/\s/g, "-")}`,
+    name: m,
+    supportedServices: allAutoServices,
+  })),
 });
 
 export const vehicleMakes: VehicleMake[] = [

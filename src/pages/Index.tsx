@@ -9,9 +9,29 @@ import FAQSection from "@/components/FAQSection";
 import ServiceAreaMap from "@/components/ServiceAreaMap";
 import VisitorCounter from "@/components/VisitorCounter";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 import { LocalBusinessSchema, FAQSchema } from "@/components/StructuredData";
+import { getActiveSections, type SectionConfig } from "@/data/siteConfig";
+
+/** Maps section type to its component — layout/theme stays constant */
+const sectionComponents: Record<SectionConfig["type"], React.ComponentType> = {
+  hero: HeroSection,
+  services: ServicesSection,
+  "vehicle-verifier": VehicleVerifier,
+  quote: QuoteTool,
+  gallery: BeforeAfterGallery,
+  reviews: ReviewsSection,
+  map: ServiceAreaMap,
+  faq: FAQSection,
+  "visitor-counter": VisitorCounter,
+};
+
+/** Alternate scroll reveal variants for visual variety */
+const revealVariants: Array<"fadeUp" | "fadeIn" | "scale"> = ["fadeUp", "fadeIn", "scale"];
 
 const Index = () => {
+  const activeSections = getActiveSections();
+
   return (
     <div className="min-h-screen bg-gradient-page">
       <LocalBusinessSchema />
@@ -20,18 +40,30 @@ const Index = () => {
       <StickyHeader />
 
       <main>
-        <HeroSection />
-        <ServicesSection />
-        <VehicleVerifier />
-        <QuoteTool />
-        <BeforeAfterGallery />
-        <ReviewsSection />
-        <ServiceAreaMap />
-        <FAQSection />
-        <VisitorCounter />
+        {activeSections.map((section, i) => {
+          const Component = sectionComponents[section.type];
+          if (!Component) return null;
+
+          // Hero doesn't need scroll reveal — it's above the fold
+          if (section.type === "hero") {
+            return <Component key={section.id} />;
+          }
+
+          return (
+            <ScrollReveal
+              key={section.id}
+              variant={revealVariants[i % revealVariants.length]}
+              delay={0.05}
+            >
+              <Component />
+            </ScrollReveal>
+          );
+        })}
       </main>
 
-      <Footer />
+      <ScrollReveal variant="fadeIn">
+        <Footer />
+      </ScrollReveal>
     </div>
   );
 };
