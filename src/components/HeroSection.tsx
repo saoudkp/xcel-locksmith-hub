@@ -7,10 +7,10 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Mobile: standard hero (no scroll animation) */}
-      <div className="md:hidden relative min-h-screen flex items-center pt-28 pb-16">
+      <div className="md:hidden relative min-h-screen flex items-end pb-12 pt-28">
         <div className="absolute inset-0 bg-gradient-page" />
         <div className="container mx-auto px-4 relative z-10">
-          <HeroContent />
+          <HeroContentMobile />
         </div>
       </div>
 
@@ -19,11 +19,23 @@ const HeroSection = () => {
         {/* The animation container drives 300vh of scroll */}
         <HeroLockAnimation />
 
-        {/* Hero content overlaid on the sticky canvas */}
+        {/* Cinematic overlay — dark gradient from bottom for text legibility */}
         <div className="absolute inset-0 pointer-events-none" style={{ height: "300vh" }}>
-          <div className="sticky top-0 h-screen flex items-center justify-center pointer-events-auto">
-            <div className="container mx-auto px-4 relative z-10">
-              <HeroContent />
+          <div className="sticky top-0 h-screen w-full">
+            {/* Vignette + bottom gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent h-32" />
+            {/* Side vignettes for cinematic feel */}
+            <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-background/30 to-transparent" />
+            <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-background/30 to-transparent" />
+          </div>
+        </div>
+
+        {/* Hero content pinned at bottom of viewport */}
+        <div className="absolute inset-0 pointer-events-none" style={{ height: "300vh" }}>
+          <div className="sticky top-0 h-screen flex flex-col justify-end pointer-events-auto">
+            <div className="container mx-auto px-4 relative z-10 pb-12">
+              <HeroContentDesktop />
             </div>
           </div>
         </div>
@@ -32,106 +44,181 @@ const HeroSection = () => {
   );
 };
 
-/** Shared hero content for both mobile and desktop */
-const HeroContent = () => (
-  <div className="max-w-4xl mx-auto text-center">
-    {/* Trust badges row */}
+/** Desktop: cinematic bottom-aligned layout */
+const HeroContentDesktop = () => (
+  <div className="max-w-7xl mx-auto">
+    {/* Bottom row: headline left, CTA + prices right */}
+    <div className="flex items-end justify-between gap-8">
+      {/* Left: headline + subtitle */}
+      <div className="max-w-2xl">
+        {/* Trust badges — small, subtle */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-wrap gap-2 mb-5"
+        >
+          {[
+            { icon: Clock, text: "24/7" },
+            { icon: Shield, text: "Licensed" },
+            { icon: Star, text: "5-Star" },
+            { icon: Award, text: "Ohio" },
+          ].map((badge, i) => (
+            <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-foreground/80 bg-background/40 backdrop-blur-sm border border-border/30">
+              <badge.icon className="w-3 h-3 text-accent" />
+              {badge.text}
+            </div>
+          ))}
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="font-display font-extrabold tracking-tight leading-[1.05] text-5xl lg:text-6xl xl:text-7xl text-foreground drop-shadow-lg"
+        >
+          Cleveland's Fastest<br />
+          <span className="text-accent">24/7 Emergency</span> Locksmith
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-base lg:text-lg text-foreground/70 max-w-lg mt-4 leading-relaxed drop-shadow-sm"
+        >
+          Locked out? We handle residential, commercial & automotive emergencies.
+          <strong className="text-foreground"> 20–30 min arrival.</strong>
+        </motion.p>
+      </div>
+
+      {/* Right: CTA stack */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="flex flex-col items-end gap-4 shrink-0"
+      >
+        {/* Response badge */}
+        <div className="flex items-center gap-3 bg-background/50 backdrop-blur-md px-5 py-3 rounded-xl border border-border/30">
+          <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center">
+            <Clock className="w-5 h-5 text-accent" />
+          </div>
+          <div className="text-left">
+            <p className="text-accent font-display text-xl font-bold">{defaultBrand.responseTime}</p>
+            <p className="text-xs text-muted-foreground">Guaranteed response</p>
+          </div>
+        </div>
+
+        {/* CTA buttons */}
+        <a
+          href={defaultBrand.phoneNumber}
+          className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-lg px-8 py-4 rounded-xl w-full"
+        >
+          <Phone className="w-5 h-5" />
+          Call {defaultBrand.phoneDisplay}
+        </a>
+        <a
+          href="#quote"
+          className="touch-target flex items-center justify-center gap-2 bg-background/50 backdrop-blur-md hover:bg-background/70 text-foreground font-semibold px-8 py-3 rounded-xl transition-all border border-border/30 w-full text-center"
+        >
+          Get a Free Quote
+        </a>
+
+        {/* Prices row */}
+        <div className="flex gap-3">
+          {[
+            { label: "Residential", price: "$35" },
+            { label: "Commercial", price: "$45" },
+            { label: "Automotive", price: "$50" },
+          ].map((item, i) => (
+            <div key={i} className="bg-background/40 backdrop-blur-sm rounded-lg px-4 py-2 text-center border border-border/20">
+              <p className="text-accent font-display text-lg font-bold">{item.price}+</p>
+              <p className="text-[10px] text-muted-foreground font-medium">{item.label}</p>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  </div>
+);
+
+/** Mobile: compact version */
+const HeroContentMobile = () => (
+  <div className="max-w-lg mx-auto text-center">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-wrap justify-center gap-3 mb-8"
+      className="flex flex-wrap justify-center gap-2 mb-6"
     >
       {[
-        { icon: Clock, text: "24/7 Service" },
-        { icon: Shield, text: "Licensed & Insured" },
-        { icon: Star, text: "5-Star Rated" },
-        { icon: DollarSign, text: "No Hidden Fees" },
-        { icon: Award, text: "Ohio Licensed" },
+        { icon: Clock, text: "24/7" },
+        { icon: Shield, text: "Licensed" },
+        { icon: Star, text: "5-Star" },
       ].map((badge, i) => (
-        <div key={i} className="skeu-badge px-4 py-2 rounded-full flex items-center gap-2 text-sm font-semibold text-foreground">
-          <badge.icon className="w-4 h-4 text-accent" />
+        <div key={i} className="skeu-badge px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-foreground">
+          <badge.icon className="w-3 h-3 text-accent" />
           {badge.text}
         </div>
       ))}
     </motion.div>
 
-    {/* Headline */}
     <motion.h1
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="font-display font-extrabold tracking-tight mb-6 leading-[1.15] text-4xl sm:text-5xl md:text-6xl text-foreground"
+      className="font-display font-extrabold tracking-tight mb-4 leading-[1.1] text-3xl sm:text-4xl text-foreground"
     >
       Cleveland's Fastest<br />
-      24/7 Emergency Locksmith
+      <span className="text-accent">24/7</span> Locksmith
     </motion.h1>
 
-    {/* Subheadline */}
     <motion.p
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+      className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed"
     >
-      Locked out? Keys lost? Need new locks? We handle residential, commercial & automotive
-      locksmith emergencies across Cleveland and 24 surrounding cities.
-      <strong className="text-foreground"> We arrive in 20–30 minutes.</strong>
+      Residential, commercial & automotive emergencies.
+      <strong className="text-foreground"> 20–30 min arrival.</strong>
     </motion.p>
 
-    {/* Response time guarantee */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: 0.5 }}
-      className="inline-flex items-center gap-3 neu-card px-6 py-4 rounded-2xl mb-8"
-    >
-      <div className="w-12 h-12 rounded-full bg-accent/15 flex items-center justify-center">
-        <Clock className="w-7 h-7 text-accent" />
-      </div>
-      <div className="text-left">
-        <p className="text-accent font-display text-2xl font-bold">{defaultBrand.responseTime} Response</p>
-        <p className="text-sm text-muted-foreground">Guaranteed fast arrival, any time, any day</p>
-      </div>
-    </motion.div>
-
-    {/* CTA buttons */}
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
-      className="flex flex-col sm:flex-row gap-4 justify-center"
+      transition={{ duration: 0.5, delay: 0.5 }}
+      className="flex flex-col gap-3"
     >
       <a
         href={defaultBrand.phoneNumber}
-        className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-lg px-8 py-4 rounded-xl"
+        className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-6 py-4 rounded-xl"
       >
-        <Phone className="w-6 h-6" />
-        Call {defaultBrand.phoneDisplay} Now
+        <Phone className="w-5 h-5" />
+        Call {defaultBrand.phoneDisplay}
       </a>
       <a
         href="#quote"
-        className="touch-target flex items-center justify-center gap-2 neu-card hover:bg-secondary text-foreground font-semibold text-lg px-8 py-4 rounded-xl transition-all"
+        className="touch-target flex items-center justify-center gap-2 neu-card hover:bg-secondary text-foreground font-semibold px-6 py-3 rounded-xl transition-all"
       >
         Get a Free Quote
       </a>
     </motion.div>
 
-    {/* Starting prices row */}
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.8 }}
-      className="mt-12 grid grid-cols-3 gap-4 max-w-lg mx-auto"
+      transition={{ duration: 0.5, delay: 0.7 }}
+      className="mt-8 grid grid-cols-3 gap-3"
     >
       {[
         { label: "Residential", price: "$35" },
         { label: "Commercial", price: "$45" },
         { label: "Automotive", price: "$50" },
       ].map((item, i) => (
-        <div key={i} className="neu-card rounded-xl p-4 text-center">
-          <p className="text-accent font-display text-2xl font-bold">{item.price}+</p>
-          <p className="text-xs text-muted-foreground mt-1 font-medium">{item.label}</p>
+        <div key={i} className="neu-card rounded-lg p-3 text-center">
+          <p className="text-accent font-display text-xl font-bold">{item.price}+</p>
+          <p className="text-[10px] text-muted-foreground font-medium">{item.label}</p>
         </div>
       ))}
     </motion.div>
