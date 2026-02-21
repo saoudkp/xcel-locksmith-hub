@@ -112,7 +112,7 @@ const HeroLockAnimation = () => {
     <div
       ref={containerRef}
       className="hidden md:block"
-      style={{ height: "500vh" }}
+      style={{ height: "350vh" }}
     >
       <div className="sticky top-0 h-screen w-full flex items-center justify-center">
         <canvas

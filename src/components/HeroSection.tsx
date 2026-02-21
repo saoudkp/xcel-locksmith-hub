@@ -20,19 +20,16 @@ const HeroSection = () => {
         <HeroLockAnimation />
 
         {/* Cinematic overlay — dark gradient from bottom for text legibility */}
-        <div className="absolute inset-0 pointer-events-none" style={{ height: "500vh" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ height: "350vh" }}>
           <div className="sticky top-0 h-screen w-full">
-            {/* Vignette + bottom gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent h-32" />
-            {/* Side vignettes for cinematic feel */}
-            <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-background/30 to-transparent" />
-            <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-background/30 to-transparent" />
+            {/* Subtle bottom gradient only — let the animation breathe */}
+            <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background/50 to-transparent" />
           </div>
         </div>
 
         {/* Hero content pinned at bottom of viewport */}
-        <div className="absolute inset-0 pointer-events-none" style={{ height: "500vh" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ height: "350vh" }}>
           <div className="sticky top-0 h-screen flex flex-col justify-end pointer-events-auto">
             <div className="container mx-auto px-4 relative z-10 pb-12">
               <HeroContentDesktop />
