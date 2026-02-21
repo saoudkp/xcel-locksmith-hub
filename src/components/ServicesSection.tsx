@@ -1,95 +1,163 @@
-import { Home, Building2, Car, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Building2, Car, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { services, Service, ServiceCategory } from "@/data/services";
 import ServiceDetailDialog from "@/components/ServiceDetailDialog";
+import categoryResidentialImg from "@/assets/category-residential.jpg";
+import categoryCommercialImg from "@/assets/category-commercial.jpg";
+import categoryAutomotiveImg from "@/assets/category-automotive.jpg";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
-const categoryConfig: Record<ServiceCategory, { icon: typeof Home; label: string; description: string }> = {
-  residential: { icon: Home, label: "Residential", description: "Home lockouts, lock installation, rekeying, smart locks & more" },
-  commercial: { icon: Building2, label: "Commercial", description: "Business security, access control, master key systems & more" },
-  automotive: { icon: Car, label: "Automotive", description: "Car lockouts, key replacement, ignition repair & more" },
+const categoryConfig: Record<ServiceCategory, {
+  icon: typeof Home;
+  label: string;
+  description: string;
+  image: string;
+  gradient: string;
+  accentBorder: string;
+}> = {
+  residential: {
+    icon: Home,
+    label: "Residential",
+    description: "Home lockouts, lock installation, rekeying, smart locks & more",
+    image: categoryResidentialImg,
+    gradient: "from-blue/20 via-transparent to-transparent",
+    accentBorder: "border-l-blue",
+  },
+  commercial: {
+    icon: Building2,
+    label: "Commercial",
+    description: "Business security, access control, master key systems & more",
+    image: categoryCommercialImg,
+    gradient: "from-accent/20 via-transparent to-transparent",
+    accentBorder: "border-l-accent",
+  },
+  automotive: {
+    icon: Car,
+    label: "Automotive",
+    description: "Car lockouts, key replacement, ignition repair & more",
+    image: categoryAutomotiveImg,
+    gradient: "from-cta-red/20 via-transparent to-transparent",
+    accentBorder: "border-l-cta-red",
+  },
 };
 
 const ServiceCarousel = ({ category, onSelect }: { category: ServiceCategory; onSelect: (s: Service) => void }) => {
   const config = categoryConfig[category];
   const catServices = services.filter(s => s.category === category && s.isActive);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", slidesToScroll: 1 },
-    [Autoplay({ delay: 4000, stopOnInteraction: true })]
+    [Autoplay({ delay: 5000, stopOnInteraction: true })]
   );
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      className="neu-card rounded-3xl overflow-hidden"
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl skeu-badge flex items-center justify-center">
-            <config.icon className="w-6 h-6 text-accent" />
-          </div>
+      {/* Category header with image */}
+      <div className="relative h-40 sm:h-48 overflow-hidden">
+        <img
+          src={config.image}
+          alt={`${config.label} locksmith services in Cleveland`}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-card/95 via-card/70 to-transparent" />
+        <div className="absolute inset-0 flex items-center px-6 sm:px-10">
           <div>
-            <h3 className="font-display text-2xl font-bold">{config.label}</h3>
-            <p className="text-sm text-muted-foreground">{config.description}</p>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-11 h-11 rounded-xl skeu-badge flex items-center justify-center">
+                <config.icon className="w-5 h-5 text-accent" />
+              </div>
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-foreground">{config.label}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground max-w-md">{config.description}</p>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={scrollPrev}
-            className="p-2.5 rounded-xl neu-card hover:bg-foreground/5 transition-all hover:scale-110 duration-200"
-            aria-label="Previous service"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={scrollNext}
-            className="p-2.5 rounded-xl neu-card hover:bg-foreground/5 transition-all hover:scale-110 duration-200"
-            aria-label="Next service"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
         </div>
       </div>
 
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-5">
-          {catServices.map((service) => (
+      {/* Carousel */}
+      <div className="p-5 sm:p-8">
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4">
+              {catServices.map((service) => (
+                <button
+                  key={service.id}
+                  onClick={() => onSelect(service)}
+                  className={`flex-[0_0_80%] sm:flex-[0_0_44%] lg:flex-[0_0_30%] min-w-0 text-left`}
+                  aria-label={`View details for ${service.title}`}
+                >
+                  <div className={`rounded-2xl p-5 h-full border-l-4 ${config.accentBorder} bg-background/50 hover:bg-background transition-all duration-300 group cursor-pointer relative overflow-hidden hover:shadow-lg`}>
+                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${config.gradient} rounded-2xl`} />
+                    <div className="relative flex flex-col gap-3 h-full">
+                      <h4 className="font-display font-semibold text-foreground group-hover:text-accent transition-colors leading-tight">
+                        {service.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed flex-1 line-clamp-2">
+                        {service.shortDescription}
+                      </p>
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-accent font-display font-bold text-xl">${service.startingPrice}</span>
+                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">starting</span>
+                        </div>
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity font-medium">
+                          Details <ArrowRight className="w-3 h-3" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Dots + Arrows */}
+        <div className="flex items-center justify-between mt-6">
+          <div className="flex gap-1.5">
+            {catServices.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => emblaApi?.scrollTo(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === selectedIndex ? "w-6 bg-accent" : "w-1.5 bg-muted-foreground/30"}`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
             <button
-              key={service.id}
-              onClick={() => onSelect(service)}
-              className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0 text-left"
-              aria-label={`View details for ${service.title}`}
+              onClick={scrollPrev}
+              className="p-2 rounded-full neu-card hover:bg-accent/10 transition-all"
+              aria-label="Previous service"
             >
-              <div className="neu-card rounded-2xl p-6 h-full hover:scale-[1.03] transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                {/* Hover glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-accent/5 via-transparent to-accent/5 rounded-2xl" />
-                <div className="relative flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-display font-semibold text-foreground group-hover:text-accent transition-colors">
-                      {service.title}
-                    </h4>
-                    <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-                      View →
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                    {service.shortDescription}
-                  </p>
-                  <div className="flex items-baseline gap-1 pt-1">
-                    <span className="text-accent font-display font-bold text-xl">${service.startingPrice}</span>
-                    <span className="text-xs text-muted-foreground">starting</span>
-                  </div>
-                </div>
-              </div>
+              <ChevronLeft className="w-4 h-4" />
             </button>
-          ))}
+            <button
+              onClick={scrollNext}
+              className="p-2 rounded-full neu-card hover:bg-accent/10 transition-all"
+              aria-label="Next service"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -124,7 +192,7 @@ const ServicesSection = () => {
           </p>
         </motion.div>
 
-        <div className="space-y-14">
+        <div className="space-y-10">
           {(["residential", "commercial", "automotive"] as ServiceCategory[]).map((cat) => (
             <ServiceCarousel key={cat} category={cat} onSelect={handleSelect} />
           ))}

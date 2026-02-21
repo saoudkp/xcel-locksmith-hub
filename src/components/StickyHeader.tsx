@@ -2,7 +2,7 @@ import { Phone, Menu, X, Clock, Zap, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/xcel-logo.jpeg";
+import logo from "@/assets/xcel-logo-new.png";
 import { getActiveNav, defaultBrand } from "@/data/siteConfig";
 
 const StickyHeader = () => {
@@ -37,7 +37,7 @@ const StickyHeader = () => {
         <div className="container mx-auto px-4 flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
-            <img src={logo} alt="Xcel Locksmith" className="h-14 md:h-20 w-auto rounded-lg dark:mix-blend-lighten transition-transform duration-300 group-hover:scale-105" />
+            <img src={logo} alt="Xcel Locksmith" className="h-12 md:h-16 w-auto transition-transform duration-300 group-hover:scale-105" />
           </Link>
 
           {/* Desktop nav */}

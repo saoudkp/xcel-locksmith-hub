@@ -1,10 +1,34 @@
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
-import { defaultContact, defaultBrand } from "@/data/siteConfig";
+import { Phone, Mail, Facebook, Instagram, MessageCircle } from "lucide-react";
+import { defaultContact } from "@/data/siteConfig";
+
+const contacts = [
+  {
+    icon: Phone,
+    label: "Call 24/7",
+    value: defaultContact.phoneDisplay,
+    href: defaultContact.phone,
+    accent: true,
+  },
+  {
+    icon: Mail,
+    label: "Email",
+    value: defaultContact.email || "info@xcellocksmith.com",
+    href: `mailto:${defaultContact.email || "info@xcellocksmith.com"}`,
+    accent: false,
+  },
+  {
+    icon: MessageCircle,
+    label: "Text Us",
+    value: defaultContact.phoneDisplay,
+    href: `sms:+12165551234`,
+    accent: false,
+  },
+];
 
 const socials = [
-  { icon: Facebook, label: "Facebook", href: "https://facebook.com/xcellocksmith", color: "hover:text-blue" },
-  { icon: Instagram, label: "Instagram", href: "https://instagram.com/xcellocksmith", color: "hover:text-accent" },
+  { icon: Facebook, label: "Facebook", href: "https://facebook.com/xcellocksmith" },
+  { icon: Instagram, label: "Instagram", href: "https://instagram.com/xcellocksmith" },
 ];
 
 const ContactSection = () => {
@@ -15,82 +39,37 @@ const ContactSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-12"
         >
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
             Get in <span className="font-serif-accent text-accent">Touch</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Available 24/7 for emergencies or schedule a consultation. Reach us by phone, email, or social media — we respond fast.
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Reach us anytime — we're always just a call, text, or message away.
           </p>
         </motion.div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
-          {/* Phone */}
-          <motion.a
-            href={defaultContact.phone}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0 }}
-            className="neu-card rounded-2xl p-6 text-center group hover:scale-105 transition-transform cursor-pointer"
-          >
-            <div className="w-14 h-14 rounded-xl skeu-cta-red flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse-glow-red">
-              <Phone className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="font-display font-bold text-lg mb-1">Call Us 24/7</h3>
-            <p className="text-accent font-semibold">{defaultContact.phoneDisplay}</p>
-            <p className="text-xs text-muted-foreground mt-1">No voicemail — real humans answer</p>
-          </motion.a>
-
-          {/* Email */}
-          <motion.a
-            href="mailto:info@xcellocksmith.com"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="neu-card rounded-2xl p-6 text-center group hover:scale-105 transition-transform cursor-pointer"
-          >
-            <div className="w-14 h-14 rounded-xl skeu-button flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse-glow">
-              <Mail className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="font-display font-bold text-lg mb-1">Email Us</h3>
-            <p className="text-accent font-semibold text-sm">info@xcellocksmith.com</p>
-            <p className="text-xs text-muted-foreground mt-1">Response within 1 hour</p>
-          </motion.a>
-
-          {/* Location */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="neu-card rounded-2xl p-6 text-center"
-          >
-            <div className="w-14 h-14 rounded-xl skeu-badge flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-6 h-6 text-accent" />
-            </div>
-            <h3 className="font-display font-bold text-lg mb-1">Service Area</h3>
-            <p className="text-sm text-muted-foreground">{defaultContact.address}</p>
-            <p className="text-xs text-muted-foreground mt-1">24+ cities covered</p>
-          </motion.div>
-
-          {/* Hours */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="neu-card rounded-2xl p-6 text-center"
-          >
-            <div className="w-14 h-14 rounded-xl skeu-badge flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-6 h-6 text-accent" />
-            </div>
-            <h3 className="font-display font-bold text-lg mb-1">Hours</h3>
-            <p className="text-accent font-semibold">{defaultContact.hours}</p>
-            <p className="text-xs text-muted-foreground mt-1">Including holidays</p>
-          </motion.div>
+        {/* Contact methods */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10 max-w-3xl mx-auto">
+          {contacts.map(({ icon: Icon, label, value, href, accent }, i) => (
+            <motion.a
+              key={label}
+              href={href}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="neu-card rounded-2xl px-6 py-4 flex items-center gap-4 hover:scale-105 transition-transform cursor-pointer group"
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${accent ? "skeu-cta-red group-hover:animate-pulse-glow-red" : "skeu-badge"}`}>
+                <Icon className={`w-5 h-5 ${accent ? "text-white" : "text-accent"}`} />
+              </div>
+              <div className="text-left">
+                <p className="text-xs text-muted-foreground font-medium">{label}</p>
+                <p className={`font-display font-bold ${accent ? "text-accent" : "text-foreground"}`}>{value}</p>
+              </div>
+            </motion.a>
+          ))}
         </div>
 
         {/* Social links */}
@@ -98,17 +77,17 @@ const ContactSection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-10 flex items-center justify-center gap-4"
+          className="flex items-center justify-center gap-4"
         >
           <span className="text-sm text-muted-foreground">Follow us:</span>
-          {socials.map(({ icon: Icon, label, href, color }) => (
+          {socials.map(({ icon: Icon, label, href }) => (
             <a
               key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Follow Xcel Locksmith on ${label}`}
-              className={`p-3 neu-card rounded-xl text-muted-foreground ${color} transition-colors hover:scale-110 duration-200`}
+              className="p-3 neu-card rounded-xl text-muted-foreground hover:text-accent transition-colors hover:scale-110 duration-200"
             >
               <Icon className="w-5 h-5" />
             </a>

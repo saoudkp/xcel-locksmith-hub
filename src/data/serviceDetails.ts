@@ -1,7 +1,12 @@
 /**
  * Extended service descriptions for SEO-rich detail dialogs.
  * Each entry maps to a service slug with long-form copy and category images.
+ * Category images use locally generated professional photographs.
  */
+
+import categoryResidentialImg from "@/assets/category-residential.jpg";
+import categoryCommercialImg from "@/assets/category-commercial.jpg";
+import categoryAutomotiveImg from "@/assets/category-automotive.jpg";
 
 export interface ServiceDetail {
   slug: string;
@@ -12,9 +17,9 @@ export interface ServiceDetail {
 }
 
 const categoryImages: Record<string, string> = {
-  residential: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
-  commercial: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
-  automotive: "https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=600&h=400&fit=crop",
+  residential: categoryResidentialImg,
+  commercial: categoryCommercialImg,
+  automotive: categoryAutomotiveImg,
 };
 
 export const serviceDetails: Record<string, ServiceDetail> = {

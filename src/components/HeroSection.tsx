@@ -1,7 +1,6 @@
 import { Phone, Shield, Clock, Star, Award, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
-
-const PHONE_NUMBER = "tel:+12165551234";
+import { defaultBrand } from "@/data/siteConfig";
 
 const HeroSection = () => {
   return (
@@ -9,7 +8,7 @@ const HeroSection = () => {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-page" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsla(217,91%,60%,0.08)_0%,_transparent_60%)]" />
-      
+
       {/* Parallax floating elements */}
       <motion.div
         className="absolute top-20 left-10 w-32 h-32 rounded-full bg-accent/5 blur-3xl"
@@ -20,11 +19,6 @@ const HeroSection = () => {
         className="absolute bottom-32 right-20 w-48 h-48 rounded-full bg-primary/10 blur-3xl"
         animate={{ y: [0, 20, 0], x: [0, -20, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/4 w-24 h-24 rounded-full bg-accent/3 blur-2xl"
-        animate={{ y: [0, -40, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -50,18 +44,22 @@ const HeroSection = () => {
             ))}
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline — unified font-display for professional consistency */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-6"
+            className="font-display font-extrabold tracking-tight mb-6 leading-[1.1]"
           >
-            <span className="text-foreground">Cleveland's Fastest</span>
-            <br />
-            <span className="text-gradient-metallic font-serif-accent text-5xl sm:text-6xl md:text-8xl">24/7 Emergency</span>
-            <br />
-            <span className="text-accent">Locksmith</span>
+            <span className="block text-4xl sm:text-5xl md:text-6xl text-foreground">
+              Cleveland's Fastest
+            </span>
+            <span className="block text-4xl sm:text-5xl md:text-7xl text-gradient-metallic mt-1">
+              24/7 Emergency
+            </span>
+            <span className="block text-4xl sm:text-5xl md:text-6xl text-accent mt-1">
+              Locksmith
+            </span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -87,12 +85,12 @@ const HeroSection = () => {
               <Clock className="w-7 h-7 text-accent" />
             </div>
             <div className="text-left">
-              <p className="text-accent font-display text-2xl font-bold">20–30 Minute Response</p>
+              <p className="text-accent font-display text-2xl font-bold">{defaultBrand.responseTime} Response</p>
               <p className="text-sm text-muted-foreground">Guaranteed fast arrival, any time, any day</p>
             </div>
           </motion.div>
 
-          {/* CTA buttons - skeuomorphic */}
+          {/* CTA buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -100,11 +98,11 @@ const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <a
-              href={PHONE_NUMBER}
+              href={defaultBrand.phoneNumber}
               className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-lg px-8 py-4 rounded-xl"
             >
               <Phone className="w-6 h-6" />
-              Call (216) 555-1234 Now
+              Call {defaultBrand.phoneDisplay} Now
             </a>
             <a
               href="#quote"
@@ -114,7 +112,7 @@ const HeroSection = () => {
             </a>
           </motion.div>
 
-          {/* Starting prices row - neumorphic */}
+          {/* Starting prices row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
