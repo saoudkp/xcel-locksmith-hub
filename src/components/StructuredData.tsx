@@ -1,6 +1,7 @@
 import { faqs } from "@/data/faqs";
 import { services } from "@/data/services";
 import { getActiveLocations } from "@/data/locations";
+import { getActiveTeam } from "@/data/team";
 
 export const LocalBusinessSchema = () => {
   const schema = {
@@ -10,7 +11,13 @@ export const LocalBusinessSchema = () => {
     description: "24/7 emergency locksmith services in Cleveland, OH. Residential, commercial & automotive. Licensed, insured, no hidden fees.",
     url: "https://xcellocksmith.com",
     telephone: "+12165551234",
+    email: "info@xcellocksmith.com",
     priceRange: "$$",
+    image: "https://xcellocksmith.com/og-image.jpg",
+    sameAs: [
+      "https://facebook.com/xcellocksmith",
+      "https://instagram.com/xcellocksmith",
+    ],
     address: {
       "@type": "PostalAddress",
       addressLocality: "Cleveland",
@@ -27,6 +34,12 @@ export const LocalBusinessSchema = () => {
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
       opens: "00:00",
       closes: "23:59",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      reviewCount: "347",
+      bestRating: "5",
     },
     areaServed: getActiveLocations().map(l => ({
       "@type": "City",
@@ -66,6 +79,26 @@ export const FAQSchema = () => {
         "@type": "Answer",
         text: faq.answer,
       },
+    })),
+  };
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
+};
+
+export const TeamSchema = () => {
+  const team = getActiveTeam();
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Xcel Locksmith",
+    url: "https://xcellocksmith.com",
+    employee: team.map(m => ({
+      "@type": "Person",
+      name: m.name,
+      jobTitle: m.role,
+      description: m.bio,
+      image: m.photoUrl,
+      knowsAbout: m.specialties,
     })),
   };
 
