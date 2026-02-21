@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/xcel-logo.jpeg";
-
-const PHONE_NUMBER = "tel:+12165551234";
+import { getActiveNav, defaultBrand } from "@/data/siteConfig";
 
 const StickyHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,15 +21,8 @@ const StickyHeader = () => {
     localStorage.setItem("xcel-theme", dark ? "dark" : "light");
   }, [dark]);
 
-  const navLinks = [
-    { href: "#services", label: "Services" },
-    { href: "#gallery", label: "Gallery" },
-    { href: "#vehicle-verifier", label: "Vehicle Check" },
-    { href: "#quote", label: "Free Quote" },
-    { href: "#reviews", label: "Reviews" },
-    { href: "#service-area", label: "Service Area" },
-    { href: "#faq", label: "FAQ" },
-  ];
+  const PHONE_NUMBER = defaultBrand.phoneNumber;
+  const navLinks = getActiveNav().map(n => ({ href: n.href, label: n.label }));
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">

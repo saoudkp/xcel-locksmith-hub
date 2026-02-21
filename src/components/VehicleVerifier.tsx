@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Car, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
+import { Car, CheckCircle, AlertCircle } from "lucide-react";
 import { vehicleMakes, VehicleMake, VehicleModel } from "@/data/vehicles";
 
 const VehicleVerifier = () => {
@@ -25,21 +25,42 @@ const VehicleVerifier = () => {
         </motion.div>
 
         <div className="max-w-2xl mx-auto glass-card rounded-2xl p-8">
-          {/* Make Selection */}
+          {/* Make Selection with Logos */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-foreground mb-3">Select Vehicle Make</label>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               {vehicleMakes.map((make) => (
                 <button
                   key={make.id}
                   onClick={() => { setSelectedMake(make); setSelectedModel(null); }}
-                  className={`touch-target px-3 py-3 rounded-lg text-sm font-medium transition-all border ${
+                  className={`flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-sm font-medium transition-all border ${
                     selectedMake?.id === make.id
-                      ? "bg-accent text-accent-foreground border-accent"
-                      : "glass-card border-border hover:bg-secondary text-foreground"
+                      ? "bg-accent/10 text-accent border-accent shadow-sm shadow-accent/10"
+                      : "glass-card border-border hover:bg-secondary text-foreground hover:border-accent/30"
                   }`}
                 >
-                  {make.name}
+                  {/* Logo placeholder — admin can replace via backend upload */}
+                  <div className="w-10 h-10 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                    {make.logoUrl ? (
+                      <img
+                        src={make.logoUrl}
+                        alt={`${make.name} logo`}
+                        className="w-8 h-8 object-contain"
+                        loading="lazy"
+                        onError={(e) => {
+                          // Fallback to text initial if logo fails
+                          const target = e.currentTarget;
+                          target.style.display = "none";
+                          target.parentElement!.innerHTML = `<span class="font-display font-bold text-lg text-accent">${make.name.charAt(0)}</span>`;
+                        }}
+                      />
+                    ) : (
+                      <span className="font-display font-bold text-lg text-accent">
+                        {make.name.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs leading-tight text-center">{make.name}</span>
                 </button>
               ))}
             </div>
@@ -54,7 +75,9 @@ const VehicleVerifier = () => {
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-6 overflow-hidden"
               >
-                <label className="block text-sm font-semibold text-foreground mb-3">Select Model</label>
+                <label className="block text-sm font-semibold text-foreground mb-3">
+                  Select {selectedMake.name} Model
+                </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {selectedMake.models.map((model) => (
                     <button
@@ -84,7 +107,23 @@ const VehicleVerifier = () => {
                 className="glass-card rounded-xl p-6 border border-accent/20"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <Car className="w-6 h-6 text-accent" />
+                  {/* Show brand logo in results */}
+                  {selectedMake?.logoUrl ? (
+                    <div className="w-10 h-10 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={selectedMake.logoUrl}
+                        alt={selectedMake.name}
+                        className="w-8 h-8 object-contain"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.style.display = "none";
+                          target.parentElement!.innerHTML = `<svg class="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`;
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <Car className="w-6 h-6 text-accent" />
+                  )}
                   <h3 className="font-display text-xl font-bold">
                     {selectedMake?.name} {selectedModel.name}
                   </h3>
