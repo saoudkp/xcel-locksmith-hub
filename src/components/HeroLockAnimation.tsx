@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useCallback, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -51,6 +51,9 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     ctx.drawImage(img, dx, dy, drawW, drawH);
   }, []);
 
+  // Store tween ref so useLayoutEffect cleanup can kill it synchronously
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const wrapper = wrapperRef.current;
@@ -61,7 +64,6 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
     const images: HTMLImageElement[] = [];
     let loadedCount = 0;
-    let tween: gsap.core.Tween | null = null;
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -88,7 +90,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     const setupAnimation = () => {
       const obj = { frame: 0 };
 
-      tween = gsap.to(obj, {
+      tweenRef.current = gsap.to(obj, {
         frame: FRAME_COUNT - 1,
         snap: "frame",
         ease: "none",
@@ -114,13 +116,21 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     window.addEventListener("resize", setCanvasSize);
     return () => {
       window.removeEventListener("resize", setCanvasSize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Synchronous cleanup BEFORE React commits DOM deletions
+  useLayoutEffect(() => {
+    return () => {
+      const tween = tweenRef.current;
       if (tween) {
         const st = tween.scrollTrigger;
         if (st) st.kill();
         tween.kill();
+        tweenRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
