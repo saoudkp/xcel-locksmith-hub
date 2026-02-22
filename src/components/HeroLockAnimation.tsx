@@ -14,13 +14,12 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * GSAP-pinned hero.
- * Uses `pin: true` so the section stays locked until all 46 frames are scrubbed.
- * Children are rendered as overlays inside the pinned element.
+ * Scroll-locked hero using CSS sticky (no GSAP pin to avoid React DOM conflicts).
+ * The outer wrapper provides scroll height; the sticky inner stays in view.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
 
   const renderFrame = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, images: HTMLImageElement[], index: number) => {
@@ -50,8 +49,8 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const section = sectionRef.current;
-    if (!canvas || !section) return;
+    const wrapper = wrapperRef.current;
+    if (!canvas || !wrapper) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -89,10 +88,10 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
         snap: "frame",
         ease: "none",
         scrollTrigger: {
-          trigger: section,
-          pin: true,
+          trigger: wrapper,
+          start: "top top",
+          end: "bottom bottom",
           scrub: 0.5,
-          end: () => `+=${window.innerHeight * 3}`,
           onUpdate: (self) => {
             onProgress?.(self.progress);
           },
@@ -115,9 +114,13 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
   }, [onProgress, renderFrame]);
 
   return (
-    <div ref={sectionRef} className="relative h-screen w-full overflow-hidden">
-      <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
-      {children}
+    /* Outer wrapper: tall enough to create scroll room (4x viewport) */
+    <div ref={wrapperRef} className="relative" style={{ height: "400vh" }}>
+      {/* Sticky inner: stays in view while user scrolls through the wrapper */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
+        {children}
+      </div>
     </div>
   );
 };
