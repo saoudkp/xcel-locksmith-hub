@@ -14,14 +14,16 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * Scroll-locked hero using CSS sticky positioning (avoids GSAP pin transform vibration).
+ * Scroll-locked hero using CSS sticky + GSAP scrub (no pin).
  * Outer wrapper provides scroll height; sticky inner keeps canvas in view.
+ * This avoids all GSAP DOM manipulation that conflicts with React.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
+  const onProgressRef = useRef(onProgress);
+  onProgressRef.current = onProgress;
 
   const renderFrame = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, images: HTMLImageElement[], index: number) => {
     if (!images[index]) return;
@@ -58,6 +60,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
     const images: HTMLImageElement[] = [];
     let loadedCount = 0;
+    let tween: gsap.core.Tween | null = null;
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -84,7 +87,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     const setupAnimation = () => {
       const obj = { frame: 0 };
 
-      gsap.to(obj, {
+      tween = gsap.to(obj, {
         frame: FRAME_COUNT - 1,
         snap: "frame",
         ease: "none",
@@ -94,7 +97,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
           end: "bottom bottom",
           scrub: 1.2,
           onUpdate: (self) => {
-            onProgress?.(self.progress);
+            onProgressRef.current?.(self.progress);
           },
         },
         onUpdate: () => {
@@ -110,13 +113,19 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     window.addEventListener("resize", setCanvasSize);
     return () => {
       window.removeEventListener("resize", setCanvasSize);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      if (tween) {
+        const st = tween.scrollTrigger;
+        if (st) st.kill();
+        tween.kill();
+      }
     };
-  }, [onProgress, renderFrame]);
+  // Empty deps — refs handle all external values, runs once
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div ref={wrapperRef} className="relative" style={{ height: "250vh" }}>
-      <div ref={stickyRef} className="sticky top-0 h-[85vh] w-full overflow-hidden">
+      <div className="sticky top-0 h-[85vh] w-full overflow-hidden">
         <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
         {children}
       </div>
