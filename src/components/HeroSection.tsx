@@ -25,8 +25,8 @@ const HeroSection = () => {
       <div className="hidden md:block">
         <HeroLockAnimation onProgress={handleProgress}>
           {/* Gradient overlays */}
-          <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none z-[1]" />
-          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background/30 to-transparent pointer-events-none z-[1]" />
+          <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-[1]" />
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background/20 to-transparent pointer-events-none z-[1]" />
 
           {/* Hero content — staggered reveal */}
           <div className="absolute inset-0 flex flex-col justify-end z-[2]">
@@ -60,11 +60,13 @@ const HeroSection = () => {
 /** Desktop: staggered reveal driven by scroll progress */
 const HeroContentDesktop = ({ progress }: { progress: number }) => {
   const stagger = (index: number, total: number) => {
-    const start = 0.05 + (index / total) * 0.4;
-    const localP = Math.max(0, Math.min(1, (progress - start) / 0.15));
+    const start = 0.15 + (index / total) * 0.35;
+    const localP = Math.max(0, Math.min(1, (progress - start) / 0.2));
+    const eased = localP * localP * (3 - 2 * localP); // smoothstep
     return {
-      opacity: localP,
-      transform: `translateY(${(1 - localP) * 25}px)`,
+      opacity: eased,
+      transform: `translateY(${(1 - eased) * 30}px)`,
+      transition: "none",
     };
   };
 
