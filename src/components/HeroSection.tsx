@@ -123,11 +123,11 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
             </div>
           </div>
 
-          <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-7 py-3.5 rounded-xl w-full shadow-[0_4px_25px_rgba(227,27,35,0.3)]" style={stagger(4, 6)}>
+          <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 glass-cta-red text-white font-bold text-base px-7 py-3.5 rounded-xl w-full" style={stagger(4, 6)}>
             <Phone className="w-5 h-5" />
             Call {defaultBrand.phoneDisplay}
           </a>
-          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/[0.06] backdrop-blur-xl hover:bg-white/[0.12] text-white/90 font-semibold px-7 py-3 rounded-xl transition-all border border-white/[0.08] w-full text-center text-sm shadow-[0_2px_12px_rgba(0,0,0,0.2)]" style={stagger(4, 6)}>
+          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/[0.1] backdrop-blur-xl hover:bg-white/[0.18] text-white font-semibold px-7 py-3 rounded-xl transition-all border border-white/[0.15] w-full text-center text-sm shadow-[0_2px_16px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]" style={stagger(4, 6)}>
             Get a Free Quote
           </a>
 
@@ -175,10 +175,10 @@ const HeroContentMobile = () => (
     </motion.p>
 
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }} className="flex flex-col gap-3">
-      <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-6 py-4 rounded-xl">
+      <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 glass-cta-red text-white font-bold text-base px-6 py-4 rounded-xl">
         <Phone className="w-5 h-5" />Call {defaultBrand.phoneDisplay}
       </a>
-      <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/8 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-6 py-3 rounded-xl transition-all border border-white/10">
+      <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/[0.1] backdrop-blur-xl hover:bg-white/[0.18] text-white font-semibold px-6 py-3 rounded-xl transition-all border border-white/[0.15] shadow-[0_2px_16px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]">
         Get a Free Quote
       </a>
     </motion.div>
