@@ -14,12 +14,13 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * Scroll-locked hero using GSAP pin with pinType:"transform" to avoid React DOM conflicts.
- * The pinned element stays in view while ScrollTrigger scrubs through the frames.
+ * Scroll-locked hero using CSS sticky positioning (avoids GSAP pin transform vibration).
+ * Outer wrapper provides scroll height; sticky inner keeps canvas in view.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
 
   const renderFrame = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, images: HTMLImageElement[], index: number) => {
@@ -49,8 +50,8 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    const wrapper = wrapperRef.current;
+    if (!canvas || !wrapper) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -88,12 +89,10 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
         snap: "frame",
         ease: "none",
         scrollTrigger: {
-          trigger: container,
+          trigger: wrapper,
           start: "top top",
-          end: () => `+=${window.innerHeight * 3}`,
-          pin: true,
-          pinType: "transform",
-          scrub: 0.5,
+          end: "bottom bottom",
+          scrub: 1.2,
           onUpdate: (self) => {
             onProgress?.(self.progress);
           },
@@ -116,9 +115,11 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
   }, [onProgress, renderFrame]);
 
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-hidden">
-      <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
-      {children}
+    <div ref={wrapperRef} className="relative" style={{ height: "250vh" }}>
+      <div ref={stickyRef} className="sticky top-0 h-[85vh] w-full overflow-hidden">
+        <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
+        {children}
+      </div>
     </div>
   );
 };
