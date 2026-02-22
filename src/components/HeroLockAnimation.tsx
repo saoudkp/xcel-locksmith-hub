@@ -57,6 +57,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
     const images: HTMLImageElement[] = [];
     let loadedCount = 0;
+    let gsapCtx: gsap.Context | null = null;
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -81,35 +82,37 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     }
 
     const setupAnimation = () => {
-      const obj = { frame: 0 };
+      gsapCtx = gsap.context(() => {
+        const obj = { frame: 0 };
 
-      gsap.to(obj, {
-        frame: FRAME_COUNT - 1,
-        snap: "frame",
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrapper,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.5,
-          onUpdate: (self) => {
-            onProgress?.(self.progress);
+        gsap.to(obj, {
+          frame: FRAME_COUNT - 1,
+          snap: "frame",
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            onUpdate: (self) => {
+              onProgress?.(self.progress);
+            },
           },
-        },
-        onUpdate: () => {
-          const frameIndex = Math.round(obj.frame);
-          if (frameIndex !== currentFrameRef.current) {
-            currentFrameRef.current = frameIndex;
-            renderFrame(ctx, canvas, images, frameIndex);
-          }
-        },
-      });
+          onUpdate: () => {
+            const frameIndex = Math.round(obj.frame);
+            if (frameIndex !== currentFrameRef.current) {
+              currentFrameRef.current = frameIndex;
+              renderFrame(ctx, canvas, images, frameIndex);
+            }
+          },
+        });
+      }, wrapper);
     };
 
     window.addEventListener("resize", setCanvasSize);
     return () => {
       window.removeEventListener("resize", setCanvasSize);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      gsapCtx?.revert();
     };
   }, [onProgress, renderFrame]);
 
