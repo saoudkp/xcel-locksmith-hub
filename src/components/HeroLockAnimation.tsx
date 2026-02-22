@@ -4,7 +4,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FRAME_COUNT = 46;
+// Frames 1–19 and 31–46 (skip 20–30 for snappier animation)
+const FRAME_NUMBERS = [
+  ...Array.from({ length: 19 }, (_, i) => i + 1),   // 1–19
+  ...Array.from({ length: 16 }, (_, i) => i + 31),   // 31–46
+];
+const FRAME_COUNT = FRAME_NUMBERS.length; // 35
 const FRAME_PATH = "/frames/ezgif-frame-";
 const pad = (n: number) => String(n).padStart(3, "0");
 
@@ -14,10 +19,8 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * Jitter-free scroll-locked hero.
- * Uses a tall wrapper + CSS sticky (not GSAP pin/transform) to keep the
- * canvas in view. GSAP ScrollTrigger only drives progress — it never
- * touches DOM positioning, so there's zero vibration.
+ * Scroll-locked hero using CSS sticky (no GSAP pin = zero vibration).
+ * GSAP ScrollTrigger only drives frame progress, never touches DOM layout.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,6 +28,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
   const currentFrameRef = useRef(0);
   const onProgressRef = useRef(onProgress);
   onProgressRef.current = onProgress;
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
   const renderFrame = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, images: HTMLImageElement[], index: number) => {
     if (!images[index]) return;
@@ -51,9 +55,6 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     ctx.drawImage(img, dx, dy, drawW, drawH);
   }, []);
 
-  // Store tween ref so useLayoutEffect cleanup can kill it synchronously
-  const tweenRef = useRef<gsap.core.Tween | null>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const wrapper = wrapperRef.current;
@@ -74,9 +75,10 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
       renderFrame(ctx, canvas, images, currentFrameRef.current);
     };
 
-    for (let i = 1; i <= FRAME_COUNT; i++) {
+    // Load only the frames we need
+    FRAME_NUMBERS.forEach((frameNum, idx) => {
       const img = new Image();
-      img.src = `${FRAME_PATH}${pad(i)}.jpg`;
+      img.src = `${FRAME_PATH}${pad(frameNum)}.jpg`;
       img.onload = () => {
         loadedCount++;
         if (loadedCount === FRAME_COUNT) {
@@ -84,8 +86,8 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
           setupAnimation();
         }
       };
-      images[i - 1] = img;
-    }
+      images[idx] = img;
+    });
 
     const setupAnimation = () => {
       const obj = { frame: 0 };
@@ -98,7 +100,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
           trigger: wrapper,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 0.8,
           onUpdate: (self) => {
             onProgressRef.current?.(self.progress);
           },
@@ -134,7 +136,7 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative" style={{ height: "300vh" }}>
+    <div ref={wrapperRef} className="relative" style={{ height: "250vh" }}>
       <div className="sticky top-0 h-[85vh] w-full overflow-hidden">
         <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
         {children}
