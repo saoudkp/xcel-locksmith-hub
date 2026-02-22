@@ -14,12 +14,12 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * Scroll-locked hero using CSS sticky (no GSAP pin to avoid React DOM conflicts).
- * The outer wrapper provides scroll height; the sticky inner stays in view.
+ * Scroll-locked hero using GSAP pin with pinType:"transform" to avoid React DOM conflicts.
+ * The pinned element stays in view while ScrollTrigger scrubs through the frames.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
 
   const renderFrame = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, images: HTMLImageElement[], index: number) => {
@@ -49,8 +49,8 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const wrapper = wrapperRef.current;
-    if (!canvas || !wrapper) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -88,9 +88,11 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
         snap: "frame",
         ease: "none",
         scrollTrigger: {
-          trigger: wrapper,
+          trigger: container,
           start: "top top",
-          end: "bottom bottom",
+          end: () => `+=${window.innerHeight * 3}`,
+          pin: true,
+          pinType: "transform",
           scrub: 0.5,
           onUpdate: (self) => {
             onProgress?.(self.progress);
@@ -114,15 +116,10 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
   }, [onProgress, renderFrame]);
 
   return (
-    /* Outer wrapper: tall enough to create scroll room (4x viewport) */
-    <div ref={wrapperRef} className="relative" style={{ height: "400vh" }}>
-      {/* Sticky inner: stays in view while user scrolls through the wrapper */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
-        {children}
-      </div>
+    <div ref={containerRef} className="relative h-screen w-full overflow-hidden">
+      <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
+      {children}
     </div>
   );
 };
-
 export default HeroLockAnimation;
