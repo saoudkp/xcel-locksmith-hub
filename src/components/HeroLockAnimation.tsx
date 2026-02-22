@@ -37,23 +37,26 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     const img = imagesRef.current[index];
     if (!ctx || !canvas || !img) return;
 
-    const rect = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, rect.width, rect.height);
+    // Use the actual canvas buffer size (already DPR-scaled)
+    const cw = canvas.width;
+    const ch = canvas.height;
+    ctx.clearRect(0, 0, cw, ch);
 
-    const imgRatio = img.width / img.height;
-    const canvasRatio = rect.width / rect.height;
+    // Cover-fit: scale image to fill canvas, center crop
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const canvasRatio = cw / ch;
     let drawW: number, drawH: number, dx: number, dy: number;
 
     if (imgRatio > canvasRatio) {
-      drawH = rect.height;
+      drawH = ch;
       drawW = drawH * imgRatio;
-      dx = (rect.width - drawW) / 2;
+      dx = (cw - drawW) / 2;
       dy = 0;
     } else {
-      drawW = rect.width;
+      drawW = cw;
       drawH = drawW / imgRatio;
       dx = 0;
-      dy = (rect.height - drawH) / 2;
+      dy = (ch - drawH) / 2;
     }
 
     ctx.drawImage(img, dx, dy, drawW, drawH);
@@ -73,9 +76,15 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * 0.85 * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const w = window.innerWidth;
+      const h = window.innerHeight * 0.85;
+      // Set backing store to full DPR resolution for crisp rendering
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      // CSS size stays at layout size
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      // No setTransform — we draw at native resolution directly
       renderFrame(currentFrameRef.current);
     };
 
