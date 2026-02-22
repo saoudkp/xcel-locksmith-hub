@@ -15,7 +15,8 @@ const HeroSection = () => {
     <section className="relative overflow-hidden">
       {/* Mobile: standard hero (no scroll animation) */}
       <div className="md:hidden relative min-h-screen flex items-end pb-12 pt-28">
-        <div className="absolute inset-0 bg-gradient-page" />
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.8)_100%)]" />
         <div className="container mx-auto px-4 relative z-10">
           <HeroContentMobile />
         </div>
@@ -24,9 +25,9 @@ const HeroSection = () => {
       {/* Desktop: GSAP-pinned lock animation — everything inside the pinned element */}
       <div className="hidden md:block">
         <HeroLockAnimation onProgress={handleProgress}>
-          {/* Gradient overlays */}
-          <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-[1]" />
-          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background/20 to-transparent pointer-events-none z-[1]" />
+          {/* Gradient overlays — cinematic bottom fade */}
+          <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-[1]" />
+          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-[1]" />
 
           {/* Hero content — staggered reveal */}
           <div className="absolute inset-0 flex flex-col justify-end z-[2]">
@@ -43,12 +44,12 @@ const HeroSection = () => {
               pointerEvents: "none",
             }}
           >
-            <span className="text-xs font-medium text-foreground/60 tracking-widest uppercase">Scroll</span>
+            <span className="text-xs font-medium text-white/50 tracking-widest uppercase">Scroll</span>
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             >
-              <ChevronDown className="w-5 h-5 text-foreground/40" />
+              <ChevronDown className="w-5 h-5 text-white/30" />
             </motion.div>
           </div>
         </HeroLockAnimation>
@@ -81,32 +82,32 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
               { icon: Star, text: "5-Star" },
               { icon: Award, text: "Ohio" },
             ].map((badge, i) => (
-              <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-foreground/90 bg-background/50 backdrop-blur-sm border border-border/30">
+              <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/10 backdrop-blur-md border border-white/15">
                 <badge.icon className="w-3 h-3 text-accent" />
                 {badge.text}
               </div>
             ))}
           </div>
 
-          <h1 className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-foreground drop-shadow-lg" style={stagger(1, 6)}>
+          <h1 className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]" style={stagger(1, 6)}>
             Cleveland's Fastest<br />
-            <span className="text-accent">24/7 Emergency</span> Locksmith
+            <span className="text-accent drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]">24/7 Emergency</span> Locksmith
           </h1>
 
-          <p className="text-sm lg:text-base text-foreground/70 max-w-lg mt-3 leading-relaxed drop-shadow-sm" style={stagger(2, 6)}>
+          <p className="text-sm lg:text-base text-white/60 max-w-lg mt-3 leading-relaxed" style={stagger(2, 6)}>
             Locked out? We handle residential, commercial & automotive emergencies.
-            <strong className="text-foreground"> 20–30 min arrival.</strong>
+            <strong className="text-white/90"> 20–30 min arrival.</strong>
           </p>
         </div>
 
         <div className="flex flex-col items-end gap-3 shrink-0">
-          <div className="flex items-center gap-3 bg-background/50 backdrop-blur-md px-4 py-2.5 rounded-xl border border-border/30" style={stagger(3, 6)}>
-            <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center">
+          <div className="flex items-center gap-3 bg-white/8 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10" style={stagger(3, 6)}>
+            <div className="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center">
               <Clock className="w-4 h-4 text-accent" />
             </div>
             <div className="text-left">
-              <p className="text-accent font-display text-lg font-bold">{defaultBrand.responseTime}</p>
-              <p className="text-[10px] text-muted-foreground">Guaranteed response</p>
+              <p className="text-accent font-display text-lg font-bold drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]">{defaultBrand.responseTime}</p>
+              <p className="text-[10px] text-white/40">Guaranteed response</p>
             </div>
           </div>
 
@@ -114,7 +115,7 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
             <Phone className="w-5 h-5" />
             Call {defaultBrand.phoneDisplay}
           </a>
-          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-background/50 backdrop-blur-md hover:bg-background/70 text-foreground font-semibold px-7 py-3 rounded-xl transition-all border border-border/30 w-full text-center text-sm" style={stagger(4, 6)}>
+          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/8 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-7 py-3 rounded-xl transition-all border border-white/10 w-full text-center text-sm" style={stagger(4, 6)}>
             Get a Free Quote
           </a>
 
@@ -124,9 +125,9 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
               { label: "Commercial", price: "$45" },
               { label: "Automotive", price: "$50" },
             ].map((item, i) => (
-              <div key={i} className="bg-background/40 backdrop-blur-sm rounded-lg px-3 py-1.5 text-center border border-border/20">
+              <div key={i} className="bg-white/6 backdrop-blur-sm rounded-lg px-3 py-1.5 text-center border border-white/8">
                 <p className="text-accent font-display text-base font-bold">{item.price}+</p>
-                <p className="text-[9px] text-muted-foreground font-medium">{item.label}</p>
+                <p className="text-[9px] text-white/35 font-medium">{item.label}</p>
               </div>
             ))}
           </div>
@@ -145,27 +146,27 @@ const HeroContentMobile = () => (
         { icon: Shield, text: "Licensed" },
         { icon: Star, text: "5-Star" },
       ].map((badge, i) => (
-        <div key={i} className="skeu-badge px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-foreground">
+        <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/10 backdrop-blur-md border border-white/15">
           <badge.icon className="w-3 h-3 text-accent" />
           {badge.text}
         </div>
       ))}
     </motion.div>
 
-    <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="font-display font-extrabold tracking-tight mb-4 leading-[1.1] text-3xl sm:text-4xl text-foreground">
-      Cleveland's Fastest<br /><span className="text-accent">24/7</span> Locksmith
+    <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="font-display font-extrabold tracking-tight mb-4 leading-[1.1] text-3xl sm:text-4xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+      Cleveland's Fastest<br /><span className="text-accent drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]">24/7</span> Locksmith
     </motion.h1>
 
-    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed">
+    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="text-sm text-white/50 max-w-sm mx-auto mb-6 leading-relaxed">
       Residential, commercial & automotive emergencies.
-      <strong className="text-foreground"> 20–30 min arrival.</strong>
+      <strong className="text-white/90"> 20–30 min arrival.</strong>
     </motion.p>
 
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }} className="flex flex-col gap-3">
       <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-6 py-4 rounded-xl">
         <Phone className="w-5 h-5" />Call {defaultBrand.phoneDisplay}
       </a>
-      <a href="#quote" className="touch-target flex items-center justify-center gap-2 neu-card hover:bg-secondary text-foreground font-semibold px-6 py-3 rounded-xl transition-all">
+      <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/8 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-6 py-3 rounded-xl transition-all border border-white/10">
         Get a Free Quote
       </a>
     </motion.div>
@@ -176,9 +177,9 @@ const HeroContentMobile = () => (
         { label: "Commercial", price: "$45" },
         { label: "Automotive", price: "$50" },
       ].map((item, i) => (
-        <div key={i} className="neu-card rounded-lg p-3 text-center">
+        <div key={i} className="bg-white/8 backdrop-blur-sm rounded-lg p-3 text-center border border-white/10">
           <p className="text-accent font-display text-xl font-bold">{item.price}+</p>
-          <p className="text-[10px] text-muted-foreground font-medium">{item.label}</p>
+          <p className="text-[10px] text-white/35 font-medium">{item.label}</p>
         </div>
       ))}
     </motion.div>

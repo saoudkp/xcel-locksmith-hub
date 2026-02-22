@@ -12,6 +12,7 @@ import ServiceAreaMap from "@/components/ServiceAreaMap";
 import VisitorCounter from "@/components/VisitorCounter";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import ScrollToTop from "@/components/ScrollToTop";
 import { LocalBusinessSchema, FAQSchema, TeamSchema } from "@/components/StructuredData";
 import { getActiveSections, type SectionConfig } from "@/data/siteConfig";
 
@@ -69,6 +70,8 @@ const Index = () => {
       <ScrollReveal variant="fadeIn">
         <Footer />
       </ScrollReveal>
+
+      <ScrollToTop />
     </div>
   );
 };
