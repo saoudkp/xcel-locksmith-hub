@@ -1,4 +1,4 @@
-import { Phone, Menu, X, Clock, Zap, Sun, Moon } from "lucide-react";
+import { Phone, Menu, X, Sun, Moon, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,7 +53,7 @@ const StickyHeader = () => {
             ))}
           </nav>
 
-          {/* Desktop ETA + CTA + Theme */}
+          {/* Desktop CTA + Theme */}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setDark(!dark)}
@@ -62,17 +62,15 @@ const StickyHeader = () => {
             >
               {dark ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-foreground" />}
             </button>
-            <div className="skeu-badge rounded-full px-4 py-2 flex items-center gap-2 text-accent font-semibold text-sm">
-              <Clock className="w-4 h-4 animate-pulse" />
-              <span>20–30 Min</span>
-            </div>
-            <a
+            <motion.a
               href={PHONE_NUMBER}
-              className="touch-target flex items-center gap-2 skeu-cta-red text-white font-bold px-6 py-3 rounded-xl hover:scale-105 duration-300"
+              className="touch-target flex items-center gap-2 skeu-cta-red text-white font-bold px-6 py-3 rounded-xl"
+              animate={{ scale: [1, 1.04, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <Phone className="w-5 h-5" />
               <span>Call Now</span>
-            </a>
+            </motion.a>
           </div>
 
           {/* Mobile CTA + Theme + Menu */}
