@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, type ReactNode } from "react";
+import { useEffect, useRef, useCallback, useState, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -14,15 +14,15 @@ interface HeroLockAnimationProps {
 }
 
 /**
- * Scroll-locked hero using GSAP pin + pinType:"transform".
- * Uses refs for callbacks to keep the effect stable (runs once) and avoid
- * the removeChild error caused by effect re-runs tearing down GSAP mid-pin.
+ * Jitter-free scroll-locked hero.
+ * Uses a tall wrapper + CSS sticky (not GSAP pin/transform) to keep the
+ * canvas in view. GSAP ScrollTrigger only drives progress — it never
+ * touches DOM positioning, so there's zero vibration.
  */
 const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
-  // Store callback in ref so the effect never re-runs
   const onProgressRef = useRef(onProgress);
   onProgressRef.current = onProgress;
 
@@ -53,8 +53,8 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    const wrapper = wrapperRef.current;
+    if (!canvas || !wrapper) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -93,12 +93,10 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
         snap: "frame",
         ease: "none",
         scrollTrigger: {
-          trigger: container,
+          trigger: wrapper,
           start: "top top",
-          end: () => `+=${window.innerHeight * 2.5}`,
-          pin: true,
-          pinType: "transform",
-          scrub: 1.2,
+          end: "bottom bottom",
+          scrub: 1,
           onUpdate: (self) => {
             onProgressRef.current?.(self.progress);
           },
@@ -116,21 +114,21 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
     window.addEventListener("resize", setCanvasSize);
     return () => {
       window.removeEventListener("resize", setCanvasSize);
-      // Kill only our specific instance, not all ScrollTriggers
       if (tween) {
         const st = tween.scrollTrigger;
         if (st) st.kill();
         tween.kill();
       }
     };
-    // Runs once — onProgress is accessed via ref, renderFrame is stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[85vh] w-full overflow-hidden">
-      <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
-      {children}
+    <div ref={wrapperRef} className="relative" style={{ height: "300vh" }}>
+      <div className="sticky top-0 h-[85vh] w-full overflow-hidden">
+        <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
+        {children}
+      </div>
     </div>
   );
 };
