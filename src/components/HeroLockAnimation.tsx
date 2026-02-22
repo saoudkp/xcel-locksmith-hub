@@ -118,17 +118,21 @@ const HeroLockAnimation = ({ onProgress, children }: HeroLockAnimationProps) => 
         className="left-0 w-full overflow-hidden z-10"
         style={{ position: "absolute", top: 0, height: "85vh" }}
       >
-        {/* Stacked full-res images — browser renders at native quality */}
+        {/* Cinematic dark background with vignette */}
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.7)_100%)] z-[1]" />
+
+        {/* Frames displayed at native aspect ratio — no upscaling, pixel-perfect */}
         {FRAME_NUMBERS.map((frameNum, idx) => (
           <img
             key={frameNum}
             ref={(el) => { imgRefs.current[idx] = el; }}
             src={`${FRAME_PATH}${pad(frameNum)}.jpg`}
             alt=""
-            loading={idx < 5 ? "eager" : "lazy"}
+            loading={idx < 3 ? "eager" : "lazy"}
             decoding="async"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: idx === 0 ? 1 : 0 }}
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{ opacity: idx === 0 ? 1 : 0, imageRendering: "auto" }}
           />
         ))}
         {children}
