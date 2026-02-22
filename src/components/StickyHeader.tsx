@@ -11,9 +11,8 @@ const StickyHeader = () => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("xcel-theme");
       if (stored) return stored === "dark";
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
-    return true;
+    return true; // default to dark
   });
 
   useEffect(() => {
