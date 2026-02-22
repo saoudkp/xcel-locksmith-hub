@@ -25,9 +25,9 @@ const HeroSection = () => {
       {/* Desktop: GSAP-pinned lock animation — everything inside the pinned element */}
       <div className="hidden md:block">
         <HeroLockAnimation onProgress={handleProgress}>
-          {/* Gradient overlays — cinematic bottom fade */}
-          <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-[1]" />
-          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-[1]" />
+          {/* Gradient overlays — cinematic bottom fade for text readability */}
+          <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black via-black/70 to-transparent pointer-events-none z-[1]" />
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-[1]" />
 
           {/* Hero content — staggered reveal */}
           <div className="absolute inset-0 flex flex-col justify-end z-[2]">
@@ -82,40 +82,52 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
               { icon: Star, text: "5-Star" },
               { icon: Award, text: "Ohio" },
             ].map((badge, i) => (
-              <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/10 backdrop-blur-md border border-white/15">
+              <div key={i} className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[11px] font-semibold tracking-wide uppercase text-white/80 bg-white/[0.07] backdrop-blur-xl border border-white/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                 <badge.icon className="w-3 h-3 text-accent" />
                 {badge.text}
               </div>
             ))}
           </div>
 
-          <h1 className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]" style={stagger(1, 6)}>
+          <h1
+            className="font-display font-extrabold tracking-tight leading-[1.05] text-4xl lg:text-5xl xl:text-6xl text-white"
+            style={{
+              ...stagger(1, 6),
+              textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)",
+            }}
+          >
             Cleveland's Fastest<br />
-            <span className="text-accent drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]">24/7 Emergency</span> Locksmith
+            <span className="text-accent" style={{ textShadow: "0 0 30px rgba(59,130,246,0.5), 0 0 60px rgba(59,130,246,0.2)" }}>24/7 Emergency</span> Locksmith
           </h1>
 
-          <p className="text-sm lg:text-base text-white/60 max-w-lg mt-3 leading-relaxed" style={stagger(2, 6)}>
+          <p
+            className="text-sm lg:text-base text-white/55 max-w-lg mt-4 leading-relaxed font-light tracking-wide"
+            style={{
+              ...stagger(2, 6),
+              textShadow: "0 1px 8px rgba(0,0,0,0.5)",
+            }}
+          >
             Locked out? We handle residential, commercial & automotive emergencies.
-            <strong className="text-white/90"> 20–30 min arrival.</strong>
+            <strong className="text-white font-semibold"> 20–30 min arrival.</strong>
           </p>
         </div>
 
         <div className="flex flex-col items-end gap-3 shrink-0">
-          <div className="flex items-center gap-3 bg-white/8 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10" style={stagger(3, 6)}>
-            <div className="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="flex items-center gap-3 bg-white/[0.06] backdrop-blur-xl px-4 py-2.5 rounded-xl border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.3)]" style={stagger(3, 6)}>
+            <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.2)]">
               <Clock className="w-4 h-4 text-accent" />
             </div>
             <div className="text-left">
-              <p className="text-accent font-display text-lg font-bold drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]">{defaultBrand.responseTime}</p>
-              <p className="text-[10px] text-white/40">Guaranteed response</p>
+              <p className="text-accent font-display text-lg font-bold" style={{ textShadow: "0 0 12px rgba(59,130,246,0.4)" }}>{defaultBrand.responseTime}</p>
+              <p className="text-[10px] text-white/35 tracking-wider uppercase">Guaranteed response</p>
             </div>
           </div>
 
-          <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-7 py-3.5 rounded-xl w-full" style={stagger(4, 6)}>
+          <a href={defaultBrand.phoneNumber} className="touch-target flex items-center justify-center gap-3 skeu-cta-red text-white font-bold text-base px-7 py-3.5 rounded-xl w-full shadow-[0_4px_25px_rgba(227,27,35,0.3)]" style={stagger(4, 6)}>
             <Phone className="w-5 h-5" />
             Call {defaultBrand.phoneDisplay}
           </a>
-          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/8 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-7 py-3 rounded-xl transition-all border border-white/10 w-full text-center text-sm" style={stagger(4, 6)}>
+          <a href="#quote" className="touch-target flex items-center justify-center gap-2 bg-white/[0.06] backdrop-blur-xl hover:bg-white/[0.12] text-white/90 font-semibold px-7 py-3 rounded-xl transition-all border border-white/[0.08] w-full text-center text-sm shadow-[0_2px_12px_rgba(0,0,0,0.2)]" style={stagger(4, 6)}>
             Get a Free Quote
           </a>
 
@@ -125,9 +137,9 @@ const HeroContentDesktop = ({ progress }: { progress: number }) => {
               { label: "Commercial", price: "$45" },
               { label: "Automotive", price: "$50" },
             ].map((item, i) => (
-              <div key={i} className="bg-white/6 backdrop-blur-sm rounded-lg px-3 py-1.5 text-center border border-white/8">
-                <p className="text-accent font-display text-base font-bold">{item.price}+</p>
-                <p className="text-[9px] text-white/35 font-medium">{item.label}</p>
+              <div key={i} className="bg-white/[0.05] backdrop-blur-xl rounded-lg px-3 py-1.5 text-center border border-white/[0.06] shadow-[0_2px_10px_rgba(0,0,0,0.25)]">
+                <p className="text-accent font-display text-base font-bold" style={{ textShadow: "0 0 10px rgba(59,130,246,0.3)" }}>{item.price}+</p>
+                <p className="text-[9px] text-white/30 font-medium tracking-wider uppercase">{item.label}</p>
               </div>
             ))}
           </div>
