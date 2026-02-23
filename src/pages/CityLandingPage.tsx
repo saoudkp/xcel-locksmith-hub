@@ -63,6 +63,13 @@ const CityLandingPage = () => {
         <title>{location.seoMetaTitle}</title>
         <meta name="description" content={location.seoMetaDescription} />
         <link rel="canonical" href={`https://xcellocksmith.com/service-areas/${location.slug}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={location.seoMetaTitle} />
+        <meta property="og:description" content={location.seoMetaDescription} />
+        <meta property="og:url" content={`https://xcellocksmith.com/service-areas/${location.slug}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={location.seoMetaTitle} />
+        <meta name="twitter:description" content={location.seoMetaDescription} />
       </Helmet>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 

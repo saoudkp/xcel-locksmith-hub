@@ -32,6 +32,13 @@ const ServiceAreasPage = () => {
           content={`Xcel Locksmith serves ${locations.length} cities across the Cleveland metro area. 20-30 min response. Licensed & insured. Call 24/7!`}
         />
         <link rel="canonical" href="https://xcellocksmith.com/service-areas" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Service Areas | 24/7 Locksmith in Cleveland & Surrounding Cities" />
+        <meta property="og:description" content={`Xcel Locksmith serves ${locations.length} cities across the Cleveland metro area. 20-30 min response. Licensed & insured. Call 24/7!`} />
+        <meta property="og:url" content="https://xcellocksmith.com/service-areas" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Service Areas | 24/7 Locksmith in Cleveland & Surrounding Cities" />
+        <meta name="twitter:description" content={`Xcel Locksmith serves ${locations.length} cities across the Cleveland metro area. 20-30 min response. Licensed & insured. Call 24/7!`} />
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
       </Helmet>
 
