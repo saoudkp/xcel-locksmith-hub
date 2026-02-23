@@ -99,6 +99,12 @@ export const TeamSchema = () => {
       description: m.bio,
       image: m.photoUrl,
       knowsAbout: m.specialties,
+      hasCredential: m.certifications.map(c => ({
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "Professional Certification",
+        name: c.name,
+        url: c.fileUrl,
+      })),
     })),
   };
 
