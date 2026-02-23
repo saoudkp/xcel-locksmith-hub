@@ -164,6 +164,98 @@ The design, animations, and layout **stay exactly the same** — only the data s
 
 ---
 
+## 🛠️ CMS Customizability — Full Admin Control
+
+Once the Payload CMS backend is connected, **everything on the website becomes editable through an admin dashboard** — no code, no developer needed for day-to-day changes.
+
+### What the Admin Can Change
+
+| Content Area | What You Can Edit | Auto-Updates |
+|-------------|-------------------|--------------|
+| **Services** | Add/remove services, change titles, descriptions, pricing, icons, images | Service carousels, category pages, SEO landing pages, structured data |
+| **Service Areas (Cities)** | Add/remove cities, adjust coordinates, response times | Map pins, city landing pages, sitemap, service area badges |
+| **Team Members** | Names, roles, bios, photos, specialties | Team section cards, Schema.org employee data |
+| **Certifications** | Upload certificate images/PDFs per team member, set expiry dates, mark as verified | "Verify Certifications" viewer, SEO credential schema |
+| **Reviews** | Approve/reject customer-submitted reviews, add manual reviews, feature specific ones | Reviews section, aggregate star rating, structured data |
+| **FAQs** | Add/edit/reorder questions and answers, toggle visibility | FAQ accordion, FAQPage structured data in Google |
+| **Gallery** | Upload before/after image pairs with descriptions | Before & After comparison sliders |
+| **Vehicle Database** | Add makes/models, upload brand logos, map supported services | Vehicle Compatibility Checker tool |
+| **Site Settings** | Business name, tagline, phone, email, address, hours, logo, colors, social links | Header, footer, contact section, all CTAs, structured data |
+| **Navigation** | Reorder, rename, show/hide menu items | Sticky header navigation |
+| **Homepage Layout** | Drag-and-drop section ordering, show/hide any of the 11 sections, edit headings | Entire homepage structure |
+| **SEO Defaults** | Site title, meta description, OG image | All page meta tags, social sharing previews |
+
+### How the Payload CMS Dashboard Works
+
+```
+┌─────────────────────────────────────────────────────┐
+│  XCEL LOCKSMITH — ADMIN DASHBOARD                    │
+│                                                      │
+│  Sidebar:                                            │
+│  ├── 📄 Content                                      │
+│  │   ├── Services (add/edit/delete/reorder)          │
+│  │   ├── Service Categories                          │
+│  │   ├── Service Areas (cities on the map)           │
+│  │   ├── Team Members (with certification uploads)   │
+│  │   ├── Reviews (approve/reject/feature)            │
+│  │   ├── FAQs (reorderable)                          │
+│  │   └── Gallery (before/after pairs)                │
+│  ├── 🚗 Vehicles                                     │
+│  │   ├── Vehicle Makes (with logo upload)            │
+│  │   └── Vehicle Models                              │
+│  ├── 📨 Leads                                        │
+│  │   ├── Quote Requests (pipeline: New→Contacted→Won)│
+│  │   └── Contact Submissions                         │
+│  ├── 🖼️ Media Library (all images & PDFs)            │
+│  ├── ⚙️ Settings                                     │
+│  │   ├── Site Settings (brand, contact, colors)      │
+│  │   ├── Homepage Layout (section order & visibility)│
+│  │   └── Navigation                                  │
+│  └── 👤 Users (Admin / Manager / Staff roles)        │
+└─────────────────────────────────────────────────────┘
+```
+
+**Typical admin tasks:**
+- To add a new city: Go to **Service Areas → Create New** → enter city name, coordinates, response time → **Save**. The map updates, a new city landing page auto-generates, and the sitemap updates.
+- To update pricing: Go to **Services → [Service Name]** → change the price → **Save**. All pages showing that price update automatically.
+- To add a team member: Go to **Team Members → Create New** → fill in bio, upload photo, add certifications → **Save**. They appear on the website and in Schema.org data.
+- To approve a review: Go to **Reviews** → find the pending review → check "Approved" → **Save**. It appears on the website and the star rating recalculates.
+
+### What Auto-Generates (Zero Effort)
+
+When you add or change content in the CMS, the following happen **automatically**:
+
+| Admin Action | What Auto-Generates |
+|-------------|---------------------|
+| Add 1 new city | 1 city landing page + 29 service×city combo pages + map pin + sitemap entry = **31 new pages** |
+| Add 1 new service | 1 service page + 24 service×city combo pages + carousel card + category page entry = **26 new pages** |
+| Approve a review | Review appears on site, aggregate rating recalculates, structured data updates |
+| Upload a certificate | Available in "Verify Certifications" viewer, Schema.org credential added |
+| Change phone number | Updates across header, footer, CTAs, contact section, structured data, every landing page |
+| Reorder homepage sections | Homepage layout instantly rearranges to match |
+| Toggle a section off | Section disappears from homepage, nav link auto-hides |
+
+### Role-Based Access
+
+| Role | Can Do |
+|------|--------|
+| **Admin** | Everything — manage users, delete content, change settings, verify certifications |
+| **Manager** | Add/edit content, manage leads, upload media, respond to quotes |
+| **Staff** | View content, create leads, view quote requests |
+
+### Technical Detail: How It Works Under the Hood
+
+The current website uses **static TypeScript data files** (`services.ts`, `locations.ts`, `team.ts`, etc.) that map 1:1 to Payload CMS collections. When the backend is deployed:
+
+1. Each `import { data } from '@/data/file'` becomes a `fetch()` to Payload's REST API
+2. The React components **don't change at all** — only the data source swaps
+3. Pages use **ISR (Incremental Static Regeneration)** — they're pre-built for speed but refresh automatically when content changes in the CMS
+4. All media (images, PDFs, certificates) is served through a CDN for fast loading worldwide
+
+> **For full technical details, see:** [`cms_prd.md`](./cms_prd.md) (CMS integration blueprint) and [`locksmith_business_prd.md`](./locksmith_business_prd.md) (vertical SaaS expansion plan)
+
+---
+
 ## 📊 Quick Stats
 
 | Metric | Value |
