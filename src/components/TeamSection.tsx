@@ -88,7 +88,7 @@ const TeamSection = () => {
                   {/* View Proof button */}
                   <button
                     onClick={() => openViewer(member.name, member.certifications)}
-                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent/80 transition-colors"
+                    className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors shadow-sm"
                   >
                     <BadgeCheck className="w-3.5 h-3.5" />
                     Verify Certifications
