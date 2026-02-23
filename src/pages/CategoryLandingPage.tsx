@@ -104,6 +104,15 @@ const CategoryLandingPage = () => {
         <title>{meta.seoTitle}</title>
         <meta name="description" content={meta.seoDescription} />
         <link rel="canonical" href={`https://xcellocksmith.com/services/${cat}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={meta.seoTitle} />
+        <meta property="og:description" content={meta.seoDescription} />
+        <meta property="og:url" content={`https://xcellocksmith.com/services/${cat}`} />
+        <meta property="og:image" content={meta.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={meta.seoTitle} />
+        <meta name="twitter:description" content={meta.seoDescription} />
+        <meta name="twitter:image" content={meta.image} />
       </Helmet>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
