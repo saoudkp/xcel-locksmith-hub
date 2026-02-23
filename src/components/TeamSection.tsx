@@ -1,9 +1,18 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Award, Shield, Briefcase, Star } from "lucide-react";
-import { getActiveTeam } from "@/data/team";
+import { Award, Shield, Briefcase, Star, BadgeCheck } from "lucide-react";
+import { getActiveTeam, type CertificationProof } from "@/data/team";
+import CertificateViewer from "@/components/CertificateViewer";
 
 const TeamSection = () => {
   const team = getActiveTeam();
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerMember, setViewerMember] = useState<{ name: string; certs: CertificationProof[] } | null>(null);
+
+  const openViewer = (name: string, certs: CertificationProof[]) => {
+    setViewerMember({ name, certs });
+    setViewerOpen(true);
+  };
 
   return (
     <section id="team" className="py-20 relative">
@@ -72,10 +81,18 @@ const TeamSection = () => {
                         key={ci}
                         className="text-[10px] px-2 py-1 rounded-full bg-accent/10 text-accent font-medium"
                       >
-                        {cert}
+                        {cert.name}
                       </span>
                     ))}
                   </div>
+                  {/* View Proof button */}
+                  <button
+                    onClick={() => openViewer(member.name, member.certifications)}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent/80 transition-colors"
+                  >
+                    <BadgeCheck className="w-3.5 h-3.5" />
+                    Verify Certifications
+                  </button>
                 </div>
 
                 {/* Specialties */}
@@ -118,6 +135,16 @@ const TeamSection = () => {
           ))}
         </motion.div>
       </div>
+
+      {/* Certificate viewer dialog */}
+      {viewerMember && (
+        <CertificateViewer
+          memberName={viewerMember.name}
+          certifications={viewerMember.certs}
+          open={viewerOpen}
+          onOpenChange={setViewerOpen}
+        />
+      )}
     </section>
   );
 };
