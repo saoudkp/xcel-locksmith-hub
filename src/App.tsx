@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import ServiceLandingPage from "./pages/ServiceLandingPage";
 import CategoryLandingPage from "./pages/CategoryLandingPage";
 import CityLandingPage from "./pages/CityLandingPage";
+import ServiceAreasPage from "./pages/ServiceAreasPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/services/:category" element={<CategoryLandingPage />} />
             <Route path="/services/:category/:slug" element={<ServiceLandingPage />} />
+            <Route path="/service-areas" element={<ServiceAreasPage />} />
             <Route path="/service-areas/:citySlug" element={<CityLandingPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
