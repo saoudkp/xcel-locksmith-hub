@@ -1,7 +1,11 @@
 import { Phone, MapPin, Clock, Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/xcel-logo.jpeg";
+import { getActiveLocations } from "@/data/locations";
 
 const Footer = () => {
+  const cities = getActiveLocations().slice(0, 8);
+
   return (
     <footer className="border-t border-border py-16">
       <div className="container mx-auto px-4">
@@ -17,26 +21,32 @@ const Footer = () => {
           {/* Services */}
           <div>
             <h4 className="font-display text-lg font-bold mb-4">Services</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Residential Locksmith</li>
-              <li>Commercial Locksmith</li>
-              <li>Automotive Locksmith</li>
-              <li>Emergency Lockouts</li>
-              <li>Lock Rekeying</li>
-              <li>Key Duplication</li>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/services/residential" className="text-muted-foreground hover:text-foreground transition-colors">Residential Locksmith</Link></li>
+              <li><Link to="/services/commercial" className="text-muted-foreground hover:text-foreground transition-colors">Commercial Locksmith</Link></li>
+              <li><Link to="/services/automotive" className="text-muted-foreground hover:text-foreground transition-colors">Automotive Locksmith</Link></li>
+              <li><Link to="/services/residential/house-lockout-services" className="text-muted-foreground hover:text-foreground transition-colors">Emergency Lockouts</Link></li>
+              <li><Link to="/services/residential/lock-rekeying" className="text-muted-foreground hover:text-foreground transition-colors">Lock Rekeying</Link></li>
+              <li><Link to="/services/residential/key-duplication-spare-keys" className="text-muted-foreground hover:text-foreground transition-colors">Key Duplication</Link></li>
             </ul>
           </div>
 
           {/* Areas */}
           <div>
             <h4 className="font-display text-lg font-bold mb-4">Service Areas</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Cleveland & East Cleveland</li>
-              <li>Lakewood & Westlake</li>
-              <li>Parma & Strongsville</li>
-              <li>Beachwood & Euclid</li>
-              <li>Lorain & Elyria</li>
-              <li>+ 14 more cities</li>
+            <ul className="space-y-2 text-sm">
+              {cities.map(city => (
+                <li key={city.id}>
+                  <Link to={`/service-areas/${city.slug}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                    {city.cityName}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/service-areas" className="text-accent hover:text-accent/80 font-medium transition-colors">
+                  View all {getActiveLocations().length} cities →
+                </Link>
+              </li>
             </ul>
           </div>
 
