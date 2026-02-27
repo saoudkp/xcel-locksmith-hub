@@ -1,8 +1,8 @@
 # Xcel Locksmith — Payload CMS Integration PRD
 
-> **Version:** 2.0  
-> **Date:** 2026-02-23  
-> **Status:** Planning  
+> **Version:** 2.1  
+> **Date:** 2026-02-27  
+> **Status:** Frontend Complete — Ready for CMS Backend  
 > **Supersedes:** PRD.md (v1)
 
 ---
@@ -38,6 +38,75 @@ This document defines the complete backend architecture for converting the Xcel 
 - **Lead capture** — quote requests and contact forms stored in DB with email notifications
 - **Role-based access** — owner, manager, and staff permission levels
 - **Design parity** — identical frontend output, just API-driven instead of static imports
+
+### Current Frontend Status (as of v2.1)
+
+The static React SPA is **feature-complete** with the following already implemented:
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| **Homepage (config-driven)** | ✅ Done | Section order/visibility driven by `siteConfig.ts` — maps 1:1 to `homepage_layout` global |
+| **29 Service Landing Pages** | ✅ Done | `/services/:category/:slug` with full SEO meta, JSON-LD, benefits, gallery, related services |
+| **3 Category Landing Pages** | ✅ Done | `/services/:category` with service grids, trust badges, area info |
+| **24 City Landing Pages** | ✅ Done | `/service-areas/:citySlug` with local SEO, nearby cities, all service categories |
+| **Service Areas Index** | ✅ Done | `/service-areas` with interactive Leaflet map and city list |
+| **Breadcrumb Navigation** | ✅ Done | Reusable `<Breadcrumb>` component with BreadcrumbList JSON-LD schema on all landing pages |
+| **SEO Internal Linking** | ✅ Done | Footer links to all 3 category pages, popular services, and 8 city pages with "View all" link |
+| **Structured Data (JSON-LD)** | ✅ Done | LocalBusiness, FAQPage, Organization/Employee, BreadcrumbList schemas |
+| **robots.txt** | ✅ Done | Crawl directives + sitemap reference at `https://lock-smith-cms.lovable.app/sitemap.xml` |
+| **Quote Tool** | ✅ Done | 4-step form with honeypot — ready for `POST /api/quote-requests` |
+| **Review Submission** | ✅ Done | Add review form — ready for `POST /api/reviews` |
+| **Vehicle Verifier** | ✅ Done | Make/model selector with supported services — data from `vehicles.ts` |
+| **Team + Certificates** | ✅ Done | Team cards with certification viewer modal — media from `/certificates/` |
+| **Before/After Gallery** | ✅ Done | Comparison slider — images from `/src/assets/gallery/` |
+| **Visitor Counter** | ✅ Done | Animated counter component |
+
+### Frontend Route Structure (React Router)
+
+```
+/                                    → Index (config-driven homepage)
+/services/:category                  → CategoryLandingPage
+/services/:category/:slug            → ServiceLandingPage
+/service-areas                        → ServiceAreasPage
+/service-areas/:citySlug              → CityLandingPage
+*                                     → NotFound (404)
+```
+
+### Static Data Files → CMS Collection Mapping
+
+| Static File | CMS Collection | Notes |
+|-------------|---------------|-------|
+| `src/data/services.ts` | `services` + `service-categories` | 29 services across 3 categories |
+| `src/data/serviceDetails.ts` | `services` (longDescription, benefits, ctaText fields) | Merge into services collection |
+| `src/data/locations.ts` | `service-areas` | 24 cities with coordinates |
+| `src/data/team.ts` | `team-members` + certifications (media) | 4 members, 12 certificates |
+| `src/data/reviews.ts` | `reviews` | 5 seed reviews |
+| `src/data/faqs.ts` | `faqs` | 7 FAQs |
+| `src/data/vehicles.ts` | `vehicle-makes` + `vehicle-models` | 10 makes, 50+ models |
+| `src/data/siteConfig.ts` | `site-settings` + `homepage-layout` + `navigation` globals | Brand, nav, section order |
+
+### Key Frontend Components Reference
+
+| Component | File | CMS Integration Point |
+|-----------|------|----------------------|
+| `StickyHeader` | `src/components/StickyHeader.tsx` | `site-settings` + `navigation` globals |
+| `HeroSection` | `src/components/HeroSection.tsx` | `homepage-layout` global (hero section heading/subheading) |
+| `ServicesSection` | `src/components/ServicesSection.tsx` | `services` collection with category grouping |
+| `ServiceDetailDialog` | `src/components/ServiceDetailDialog.tsx` | `services` collection (detail fields) |
+| `ReviewsSection` | `src/components/ReviewsSection.tsx` | `reviews` collection (approved only) |
+| `BeforeAfterGallery` | `src/components/BeforeAfterGallery.tsx` | `gallery-items` collection |
+| `QuoteTool` | `src/components/QuoteTool.tsx` | `POST /api/quote-requests` |
+| `VehicleVerifier` | `src/components/VehicleVerifier.tsx` | `vehicle-makes` + `vehicle-models` |
+| `TeamSection` | `src/components/TeamSection.tsx` | `team-members` with nested certifications |
+| `CertificateViewer` | `src/components/CertificateViewer.tsx` | Media URLs from team-members response |
+| `ServiceAreaMap` | `src/components/ServiceAreaMap.tsx` | `service-areas` collection (Leaflet markers) |
+| `FAQSection` | `src/components/FAQSection.tsx` | `faqs` collection |
+| `ContactSection` | `src/components/ContactSection.tsx` | `site-settings` global |
+| `Footer` | `src/components/Footer.tsx` | `site-settings` + `navigation` + `service-areas` (SEO links) |
+| `Breadcrumb` | `src/components/Breadcrumb.tsx` | Auto-generated from URL structure + BreadcrumbList JSON-LD |
+| `StructuredData` | `src/components/StructuredData.tsx` | Composed from multiple collections |
+| `ScrollReveal` | `src/components/ScrollReveal.tsx` | Pure UI — no CMS data |
+| `ComparisonSlider` | `src/components/ComparisonSlider.tsx` | Pure UI — no CMS data |
 
 ---
 
@@ -731,8 +800,8 @@ Payload afterChange hooks:
 ```
 Total pages = 1 (home) + C (categories) + S (services) + A (areas) + S×A (combos)
 
-Current: 1 + 3 + 29 + 24 + 0 = 57 pages
-With combos: 1 + 3 + 29 + 24 + (29 × 24) = 753 pages
+Current (frontend-built): 1 + 3 + 29 + 24 + 1 (service-areas index) = 58 pages
+With combos: 1 + 3 + 29 + 24 + 1 + (29 × 24) = 754 pages
 
 Admin adds 1 new city → +1 city page + 29 combo pages = +30 pages auto-generated
 Admin adds 1 new service → +1 service page + 24 combo pages = +25 pages auto-generated
@@ -780,12 +849,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 ```
 JSON-LD schemas generated from CMS data:
-  ├── LocalBusiness (from site-settings + service-areas)
-  ├── FAQPage (from faqs collection)
-  ├── Organization + Employee (from team-members)
-  ├── Service / OfferCatalog (from services)
-  ├── Review / AggregateRating (from reviews)
-  └── BreadcrumbList (auto from URL structure)
+  ├── LocalBusiness (from site-settings + service-areas) — ✅ already in StructuredData.tsx
+  ├── FAQPage (from faqs collection) — ✅ already in StructuredData.tsx
+  ├── Organization + Employee (from team-members) — ✅ already in StructuredData.tsx
+  ├── Service / OfferCatalog (from services) — ✅ already in StructuredData.tsx
+  ├── Review / AggregateRating (from reviews) — ✅ already in StructuredData.tsx
+  └── BreadcrumbList (auto from URL structure) — ✅ already in Breadcrumb.tsx (all landing pages)
 ```
 
 ---
@@ -857,7 +926,8 @@ export const Users: CollectionConfig = {
 | `ServiceAreaMap` | `locations.ts` | `GET /api/service-areas?where[isActive]=true` | ISR 1hr |
 | `FAQSection` | `faqs.ts` | `GET /api/faqs?where[isActive]=true&sort=sortOrder` | ISR 1hr |
 | `ContactSection` | `siteConfig.ts` | `GET /api/globals/site-settings` | ISR 1hr |
-| `Footer` | `siteConfig.ts` | `GET /api/globals/site-settings` | ISR 1hr |
+| `Footer` | `siteConfig.ts` + `locations.ts` | `GET /api/globals/site-settings` + `service-areas` (SEO links) | ISR 1hr |
+| `Breadcrumb` | N/A (URL-derived) | Auto from route params — inject BreadcrumbList JSON-LD | ISR 1hr |
 | `StructuredData` | Multiple files | Composed from multiple API responses | ISR 1hr |
 | `CategoryLandingPage` | `services.ts` | `GET /api/service-categories/:slug` + services | ISR 1hr |
 | `CityLandingPage` | `locations.ts` | `GET /api/service-areas/:slug` + services | ISR 1hr |
@@ -1075,31 +1145,125 @@ PLAUSIBLE_DOMAIN=xcellocksmith.com
 ```typescript
 // seed.ts — Run once to migrate static data to CMS
 import { services } from './src/data/services';
+import { serviceDetails } from './src/data/serviceDetails';
 import { locations } from './src/data/locations';
 import { teamMembers } from './src/data/team';
 import { reviews } from './src/data/reviews';
 import { faqs } from './src/data/faqs';
+import { vehicleMakes } from './src/data/vehicles';
+import { defaultNavItems, defaultSections, defaultBrand, defaultContact } from './src/data/siteConfig';
 
 async function seed(payload: Payload) {
   // 1. Create categories
-  const categories = ['residential', 'commercial', 'automotive'];
-  const catMap = {};
-  for (const cat of categories) {
-    const doc = await payload.create({ collection: 'service-categories', data: { name: cat, slug: cat } });
-    catMap[cat] = doc.id;
+  const categoryMeta = {
+    residential: { label: 'Residential Locksmith', headline: 'Home Security Solutions', color: 'blue' },
+    commercial: { label: 'Commercial Locksmith', headline: 'Business Security Solutions', color: 'emerald' },
+    automotive: { label: 'Automotive Locksmith', headline: 'Vehicle Lock Solutions', color: 'amber' },
+  };
+  const catMap: Record<string, string> = {};
+  for (const [slug, meta] of Object.entries(categoryMeta)) {
+    const doc = await payload.create({ collection: 'service-categories', data: { name: slug, slug, ...meta } });
+    catMap[slug] = doc.id;
   }
 
-  // 2. Seed services
+  // 2. Seed services (merge services.ts + serviceDetails.ts)
   for (const svc of services) {
-    await payload.create({ collection: 'services', data: { ...svc, category: catMap[svc.category] } });
+    const detail = serviceDetails[svc.slug];
+    await payload.create({
+      collection: 'services',
+      data: {
+        ...svc,
+        category: catMap[svc.category],
+        longDescription: detail?.longDescription,
+        benefits: detail?.benefits?.map(b => ({ benefit: b })),
+        ctaText: detail?.ctaText,
+      },
+    });
   }
 
-  // 3. Seed locations, team, reviews, faqs...
-  for (const loc of locations) await payload.create({ collection: 'service-areas', data: loc });
-  for (const member of teamMembers) await payload.create({ collection: 'team-members', data: member });
-  for (const review of reviews) await payload.create({ collection: 'reviews', data: { ...review, isApproved: true } });
-  for (const faq of faqs) await payload.create({ collection: 'faqs', data: faq });
+  // 3. Seed locations
+  for (const loc of locations) {
+    await payload.create({ collection: 'service-areas', data: loc });
+  }
 
-  console.log('✅ Seed complete');
+  // 4. Seed team members (with certifications — upload cert images first)
+  for (const member of teamMembers) {
+    await payload.create({ collection: 'team-members', data: member });
+  }
+
+  // 5. Seed reviews (pre-approved)
+  for (const review of reviews) {
+    await payload.create({ collection: 'reviews', data: { ...review, isApproved: true } });
+  }
+
+  // 6. Seed FAQs
+  for (const faq of faqs) {
+    await payload.create({ collection: 'faqs', data: faq });
+  }
+
+  // 7. Seed vehicle makes + models
+  for (const make of vehicleMakes) {
+    const makeDoc = await payload.create({ collection: 'vehicle-makes', data: { name: make.name, logoUrl: make.logoUrl } });
+    for (const model of make.models) {
+      await payload.create({ collection: 'vehicle-models', data: { name: model.name, make: makeDoc.id } });
+    }
+  }
+
+  // 8. Seed globals
+  await payload.updateGlobal({ slug: 'site-settings', data: { ...defaultBrand, ...defaultContact } });
+  await payload.updateGlobal({ slug: 'homepage-layout', data: { sections: defaultSections } });
+  await payload.updateGlobal({ slug: 'navigation', data: { items: defaultNavItems } });
+
+  console.log('✅ Seed complete — all static data migrated to CMS');
 }
+```
+
+## Appendix C: Frontend Files Inventory
+
+All frontend files that consume data and will need API integration:
+
+```
+src/data/                          # Static data → Replace with API calls
+├── services.ts                    # 29 services (3 categories)
+├── serviceDetails.ts              # Long descriptions, benefits, images
+├── locations.ts                   # 24 cities with coords
+├── team.ts                        # 4 team members + 12 certifications
+├── reviews.ts                     # 5 reviews
+├── faqs.ts                        # 7 FAQs
+├── vehicles.ts                    # 10 makes, 50+ models
+└── siteConfig.ts                  # Brand, nav items, section config
+
+src/components/                    # UI components — keep as-is, swap data source
+├── Breadcrumb.tsx                 # ✅ BreadcrumbList JSON-LD (auto from URL)
+├── StickyHeader.tsx               # Uses siteConfig → site-settings + navigation
+├── HeroSection.tsx                # Uses siteConfig → homepage-layout
+├── ServicesSection.tsx            # Uses services.ts → services collection
+├── ServiceDetailDialog.tsx        # Uses serviceDetails.ts → services collection
+├── ReviewsSection.tsx             # Uses reviews.ts → reviews collection
+├── BeforeAfterGallery.tsx         # Static assets → gallery-items collection
+├── QuoteTool.tsx                  # POST form → quote-requests endpoint
+├── VehicleVerifier.tsx            # Uses vehicles.ts → vehicle-makes + models
+├── TeamSection.tsx                # Uses team.ts → team-members collection
+├── CertificateViewer.tsx          # Media from team → media URLs
+├── ServiceAreaMap.tsx             # Uses locations.ts → service-areas collection
+├── FAQSection.tsx                 # Uses faqs.ts → faqs collection
+├── ContactSection.tsx             # Uses siteConfig → site-settings
+├── Footer.tsx                     # Uses siteConfig + locations → SEO internal links
+├── StructuredData.tsx             # Composed from multiple data sources
+├── ScrollReveal.tsx               # Pure UI — no data
+├── ComparisonSlider.tsx           # Pure UI — no data
+└── VisitorCounter.tsx             # Pure UI — no data
+
+src/pages/                         # Route pages
+├── Index.tsx                      # Config-driven homepage (siteConfig sections)
+├── CategoryLandingPage.tsx        # /services/:category
+├── ServiceLandingPage.tsx         # /services/:category/:slug
+├── CityLandingPage.tsx            # /service-areas/:citySlug
+├── ServiceAreasPage.tsx           # /service-areas
+└── NotFound.tsx                   # 404
+
+public/
+├── robots.txt                     # ✅ Crawl directives + sitemap reference
+├── certificates/                  # 12 certificate images (→ media collection)
+└── frames/                        # Hero animation frames (keep static)
 ```
