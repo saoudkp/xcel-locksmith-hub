@@ -13,6 +13,81 @@ The frontend React SPA for Xcel Locksmith is **fully built** with 58 SEO-optimiz
 
 ---
 
+## ⚠️ Critical Architecture Constraint: Frontend/Backend Separation
+
+### Monorepo with Clear Boundaries
+
+The project **MUST** maintain a clear separation between frontend and backend code so they can be **independently deployed** via GitHub. Use a monorepo structure with distinct packages:
+
+```
+xcel-locksmith/
+├── apps/
+│   ├── web/                        # Frontend (Next.js pages + React components)
+│   │   ├── src/
+│   │   │   ├── app/                # Next.js App Router pages
+│   │   │   ├── components/         # React UI components (ported from current SPA)
+│   │   │   ├── lib/                # Frontend utilities, API client helpers
+│   │   │   └── styles/             # Tailwind, CSS
+│   │   ├── public/                 # Static assets (robots.txt, frames, etc.)
+│   │   ├── next.config.ts
+│   │   ├── tailwind.config.ts
+│   │   └── package.json            # Frontend-only dependencies
+│   │
+│   └── cms/                        # Backend (Payload CMS + API)
+│       ├── src/
+│       │   ├── collections/        # Payload collection configs
+│       │   ├── globals/            # Payload global configs
+│       │   ├── access/             # Role-based access helpers
+│       │   ├── endpoints/          # Custom API endpoints
+│       │   ├── hooks/              # Payload lifecycle hooks
+│       │   ├── email/              # Email templates (Resend)
+│       │   └── seed/               # Data seeding scripts
+│       ├── payload.config.ts       # Payload master config
+│       └── package.json            # Backend-only dependencies
+│
+├── packages/
+│   └── shared/                     # Shared types & constants
+│       ├── src/
+│       │   ├── types/              # TypeScript interfaces (Service, Location, etc.)
+│       │   └── constants/          # Shared enums, slugs, category names
+│       └── package.json
+│
+├── package.json                    # Root workspace config
+├── turbo.json                      # Turborepo (optional, for build orchestration)
+└── README.md
+```
+
+### Rules
+
+1. **No backend code in `apps/web/`** — Frontend only imports from `@xcel/shared` for types and calls the CMS via REST API or Payload Local API (if same deployment)
+2. **No frontend components in `apps/cms/`** — Backend only contains Payload collections, hooks, access control, and API endpoints
+3. **Shared types in `packages/shared/`** — All TypeScript interfaces (`Service`, `TeamMember`, `Location`, `FAQ`, `Review`, `Vehicle`, `SiteConfig`) live here and are imported by both apps
+4. **Independent `package.json`** — Each app has its own dependencies; no cross-contamination
+5. **Independent deployment** — `apps/web/` deploys to Vercel (or any static/SSR host); `apps/cms/` deploys separately (Vercel, Railway, Fly.io, or self-hosted)
+6. **Environment variables** — Each app has its own `.env` file; the frontend only needs `NEXT_PUBLIC_CMS_URL`; the backend needs DB, storage, and email credentials
+
+### Deployment Options
+
+```
+Option A: Single Vercel deployment (Payload embedded in Next.js)
+  └── Both apps deploy as one Next.js app, Payload runs at /admin
+  └── Simpler setup, but tightly coupled
+
+Option B: Separate deployments (Recommended for scalability)
+  └── apps/web/ → Vercel (frontend)
+  └── apps/cms/ → Railway / Fly.io / VPS (backend)
+  └── Frontend calls CMS via REST API (NEXT_PUBLIC_CMS_URL)
+  └── Allows independent scaling and deployment cycles
+```
+
+### Why This Matters
+- The current frontend lives in a **Lovable GitHub repo** — backend code must not break the existing frontend build
+- Clean separation enables the team to push backend changes without risking frontend regressions
+- Enables future migration (e.g., swap Payload for another CMS) without touching frontend code
+- Each app can have its own CI/CD pipeline via GitHub Actions
+
+---
+
 ## Requirement 1: Project Initialization
 
 ### Description
