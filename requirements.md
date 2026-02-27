@@ -63,28 +63,53 @@ xcel-locksmith/
 2. **No frontend components in `apps/cms/`** — Backend only contains Payload collections, hooks, access control, and API endpoints
 3. **Shared types in `packages/shared/`** — All TypeScript interfaces (`Service`, `TeamMember`, `Location`, `FAQ`, `Review`, `Vehicle`, `SiteConfig`) live here and are imported by both apps
 4. **Independent `package.json`** — Each app has its own dependencies; no cross-contamination
-5. **Independent deployment** — `apps/web/` deploys to Vercel (or any static/SSR host); `apps/cms/` deploys separately (Vercel, Railway, Fly.io, or self-hosted)
-6. **Environment variables** — Each app has its own `.env` file; the frontend only needs `NEXT_PUBLIC_CMS_URL`; the backend needs DB, storage, and email credentials
+5. **Independent deployment** — `apps/web/` deploys to Cloudflare Pages; `apps/cms/` deploys to Hetzner VPS via Coolify
+6. **Environment variables** — Each app has its own `.env` file; the frontend only needs `NEXT_PUBLIC_CMS_URL`; the backend needs `DATABASE_URL` (local PostgreSQL), R2 credentials, and `RESEND_API_KEY`
 
-### Deployment Options
+### Finalized Deployment Strategy
+
+| Layer | Service | Cost |
+|-------|---------|------|
+| **Frontend** | Cloudflare Pages (auto-deploy from GitHub) | Free |
+| **CMS + Database** | Payload CMS + PostgreSQL on Hetzner VPS via Coolify | €4/mo |
+| **Media Storage** | Cloudflare R2 (zero egress fees) | Free |
+| **Transactional Email** | Resend (3,000 emails/month) | Free |
+| **Domain** | Cloudflare Registrar (at-cost pricing) | ~€10/yr |
+| **Total** | | **~€5/mo** |
+
+#### Why This Stack
+
+- **Zero cold starts** — Hetzner VPS is always-on; no SEO penalty from serverless spin-up delays
+- **Zero database latency** — PostgreSQL runs on the same VPS as Payload CMS (same Docker network via Coolify)
+- **Zero egress fees** — Cloudflare R2 serves media globally without bandwidth charges
+- **Set and forget** — Coolify provides a visual UI for deployments, auto-SSL, and GitHub push-to-deploy
+- **SEO-bulletproof** — Critical for local locksmith search ("locksmith near me" at 2 AM must load instantly)
+
+#### Architecture
 
 ```
-Option A: Single Vercel deployment (Payload embedded in Next.js)
-  └── Both apps deploy as one Next.js app, Payload runs at /admin
-  └── Simpler setup, but tightly coupled
-
-Option B: Separate deployments (Recommended for scalability)
-  └── apps/web/ → Vercel (frontend)
-  └── apps/cms/ → Railway / Fly.io / VPS (backend)
-  └── Frontend calls CMS via REST API (NEXT_PUBLIC_CMS_URL)
-  └── Allows independent scaling and deployment cycles
+apps/web/  → Cloudflare Pages (static/SSR frontend)
+               ↓ REST API calls (NEXT_PUBLIC_CMS_URL)
+apps/cms/  → Hetzner VPS via Coolify
+               ├── Payload CMS (Docker container)
+               ├── PostgreSQL (Docker container, same network)
+               └── Auto-backup DB → Cloudflare R2
 ```
+
+#### Scaling Path
+
+| Traffic | Action | Cost |
+|---------|--------|------|
+| 0–1,000 visitors/day | Current stack | €4/mo |
+| 1,000–10,000 visitors/day | Upgrade Hetzner to 4GB RAM (€7/mo) | €7/mo |
+| 10,000+ visitors/day | Split DB to dedicated server or managed PostgreSQL | €15–25/mo |
 
 ### Why This Matters
 - The current frontend lives in a **Lovable GitHub repo** — backend code must not break the existing frontend build
 - Clean separation enables the team to push backend changes without risking frontend regressions
 - Enables future migration (e.g., swap Payload for another CMS) without touching frontend code
 - Each app can have its own CI/CD pipeline via GitHub Actions
+- **Always-on VPS** ensures Google crawler never hits a cold start wall
 
 ---
 
