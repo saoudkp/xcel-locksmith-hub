@@ -6,6 +6,7 @@ import StickyHeader from "@/components/StickyHeader";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollReveal from "@/components/ScrollReveal";
+import Breadcrumb from "@/components/Breadcrumb";
 import { getServiceBySlug, services, type Service } from "@/data/services";
 import { getServiceDetail } from "@/data/serviceDetails";
 import { faqs } from "@/data/faqs";
@@ -70,16 +71,11 @@ const ServiceLandingPage = () => {
       <StickyHeader />
 
       <main>
-        {/* ─── Breadcrumbs ─── */}
-        <div className="pt-28 md:pt-32 pb-4 container mx-auto px-4">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className={categoryColor}>{categoryLabel}</span>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground font-medium">{service.title}</span>
-          </nav>
-        </div>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: `${categoryLabel} Services`, href: `/services/${service.category}` },
+          { label: service.title },
+        ]} />
 
         {/* ─── Hero Section ─── */}
         <section className="relative overflow-hidden pb-16">

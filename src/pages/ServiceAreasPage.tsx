@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Clock, Shield, ChevronRight } from "lucide-react";
+import Breadcrumb from "@/components/Breadcrumb";
 import { getActiveLocations } from "@/data/locations";
 import { defaultBrand } from "@/data/siteConfig";
 import StickyHeader from "@/components/StickyHeader";
@@ -46,14 +47,10 @@ const ServiceAreasPage = () => {
       <ScrollToTop />
 
       <main className="min-h-screen bg-background pt-20">
-        {/* Breadcrumbs */}
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-accent transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground font-medium">Service Areas</span>
-          </nav>
-        </div>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Service Areas" },
+        ]} />
 
         {/* Hero */}
         <section className="py-12 md:py-20 relative overflow-hidden">

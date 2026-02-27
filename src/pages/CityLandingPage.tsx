@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Phone, ArrowRight, ChevronRight, Shield, Clock, Star, BadgeCheck, MapPin, Home, Building2, Car } from "lucide-react";
+import { Phone, ArrowRight, Shield, Clock, Star, BadgeCheck, MapPin, Home, Building2, Car } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import StickyHeader from "@/components/StickyHeader";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollReveal from "@/components/ScrollReveal";
+import Breadcrumb from "@/components/Breadcrumb";
 import { getLocationBySlug, getActiveLocations } from "@/data/locations";
 import { getServicesByCategory, type ServiceCategory } from "@/data/services";
 import { getServiceDetail } from "@/data/serviceDetails";
@@ -76,14 +77,11 @@ const CityLandingPage = () => {
       <StickyHeader />
 
       <main>
-        {/* Breadcrumbs */}
-        <div className="pt-28 md:pt-32 pb-4 container mx-auto px-4">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground font-medium">{location.cityName}</span>
-          </nav>
-        </div>
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Service Areas", href: "/service-areas" },
+          { label: location.cityName },
+        ]} />
 
         {/* Hero */}
         <section className="relative overflow-hidden pb-16">
