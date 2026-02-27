@@ -344,6 +344,76 @@ Add custom admin dashboard components for better content management UX.
 
 ---
 
+## Requirement 19: Service × City Combo Landing Pages
+
+### Description
+Generate SEO landing pages for every service + city combination (e.g., `/services/residential/lock-rekeying/lakewood`), scaling the site from 58 to 754+ pages. Each page targets hyper-local search intent like "lock rekeying in Lakewood OH".
+
+### Acceptance Criteria
+- [ ] Route: `/services/:category/:slug/:citySlug` renders a unique combo page
+- [ ] Page content dynamically combines service data (title, description, benefits, pricing) with city data (name, state, response time, coordinates)
+- [ ] Unique SEO meta tags per page: `<title>` = `"{Service Title} in {City}, OH | Xcel Locksmith"`, `<meta description>` localized
+- [ ] BreadcrumbList JSON-LD with 4 levels: Home → Category → Service → Service in City
+- [ ] LocalBusiness JSON-LD with `areaServed` set to the specific city
+- [ ] `generateStaticParams` produces all 696 combinations (29 services × 24 cities)
+- [ ] ISR with 1hr revalidation; auto-regenerates when services or cities change
+- [ ] Canonical URL set to the combo page URL (not the base service page)
+- [ ] Internal links: footer and service pages link to relevant combo pages
+- [ ] City-specific CTA: "Call now for {service} in {city}" with phone number
+- [ ] Nearby cities section linking to the same service in adjacent cities
+- [ ] Related services section linking to other services in the same city
+- [ ] Sitemap includes all combo pages at priority 0.7
+- [ ] No duplicate content — each page has unique H1, intro paragraph, and localized trust signals (e.g., "Serving {city} for 18+ years")
+
+### Content Template
+
+```
+H1: {Service Title} in {City}, OH
+Intro: Localized paragraph combining service description + city context
+Benefits: Same as service, with city-specific response time injected
+Pricing: Same as service page
+CTA: "Call (216) 555-1234 for {Service} in {City}"
+Nearby Cities: Links to same service in 3-5 closest cities
+Related Services: Links to 3-4 other services in same city
+Breadcrumb: Home > {Category} > {Service} > {Service} in {City}
+```
+
+### Technical Notes
+- See `cms_prd.md` Section 8.1 for page count math: 29 services × 24 cities = 696 combo pages
+- Use Payload Local API: fetch service by slug + city by slug, compose page server-side
+- Nearby cities: sort `service-areas` by haversine distance from current city coordinates
+- Avoid thin content penalty: each page must have ≥300 words of unique localized content
+- Consider a `combo_page_intro` richText field on the service or a template system for localized intros
+
+### URL Structure
+
+```
+/services/residential/house-lockout-services/cleveland
+/services/residential/house-lockout-services/lakewood
+/services/residential/house-lockout-services/parma
+/services/commercial/access-control-systems/westlake
+/services/automotive/car-key-replacement/beachwood
+...
+```
+
+### Sitemap Entry
+
+```typescript
+// In app/sitemap.ts — add combo pages
+...services.docs.flatMap(svc =>
+  areas.docs.map(area => ({
+    url: `${baseUrl}/services/${svc.category.slug}/${svc.slug}/${area.slug}`,
+    lastModified: new Date(Math.max(
+      new Date(svc.updatedAt).getTime(),
+      new Date(area.updatedAt).getTime()
+    )),
+    priority: 0.7,
+  }))
+),
+```
+
+---
+
 ## Implementation Order
 
 1. **Requirement 1** — Project setup (Next.js + Payload + DB + Storage)
@@ -356,7 +426,8 @@ Add custom admin dashboard components for better content management UX.
 8. **Requirement 14** — Dynamic sitemap
 9. **Requirement 16** — Email notifications
 10. **Requirement 11** — Quote endpoint (if not done with collection)
-11. **Requirement 18** — Admin dashboard (polish phase)
+11. **Requirement 19** — Service × City combo pages (after core pages work)
+12. **Requirement 18** — Admin dashboard (polish phase)
 
 ---
 
