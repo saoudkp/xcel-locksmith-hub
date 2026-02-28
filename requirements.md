@@ -63,53 +63,67 @@ xcel-locksmith/
 2. **No frontend components in `apps/cms/`** — Backend only contains Payload collections, hooks, access control, and API endpoints
 3. **Shared types in `packages/shared/`** — All TypeScript interfaces (`Service`, `TeamMember`, `Location`, `FAQ`, `Review`, `Vehicle`, `SiteConfig`) live here and are imported by both apps
 4. **Independent `package.json`** — Each app has its own dependencies; no cross-contamination
-5. **Independent deployment** — `apps/web/` deploys to Cloudflare Pages; `apps/cms/` deploys to Hetzner VPS via Coolify
-6. **Environment variables** — Each app has its own `.env` file; the frontend only needs `NEXT_PUBLIC_CMS_URL`; the backend needs `DATABASE_URL` (local PostgreSQL), R2 credentials, and `RESEND_API_KEY`
+5. **Single deployment** — The entire monorepo deploys as one Next.js + Payload 3.x app to Netcup VPS via Coolify
+6. **Environment variables** — Single `.env` file; needs `DATABASE_URL` (local PostgreSQL), `S3_ENDPOINT` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` (local MinIO), and `RESEND_API_KEY`
 
 ### Finalized Deployment Strategy
 
 | Layer | Service | Cost |
 |-------|---------|------|
-| **Frontend** | Cloudflare Pages (auto-deploy from GitHub) | Free |
-| **CMS + Database** | Payload CMS + PostgreSQL on Hetzner VPS via Coolify | €4/mo |
-| **Media Storage** | Cloudflare R2 (zero egress fees) | Free |
+| **App (Frontend + CMS)** | Single Next.js + Payload 3.x on Netcup VPS via Coolify | ~€5.28/mo |
+| **Database** | PostgreSQL (Docker container, same VPS) | Included |
+| **Media Storage** | MinIO S3-compatible (Docker container, same VPS) | Included |
 | **Transactional Email** | Resend (3,000 emails/month) | Free |
 | **Domain** | Cloudflare Registrar (at-cost pricing) | ~€10/yr |
-| **Total** | | **~€5/mo** |
+| **Total** | | **~€6/mo** |
+
+#### VPS Specs — Netcup VPS 500 G12
+
+| Spec | Value |
+|------|-------|
+| **Location** | Manassas, Virginia (US East) |
+| **vCPU** | 2 vCore (KVM) |
+| **RAM** | 4 GB DDR5 ECC |
+| **Storage** | 128 GB NVMe |
+| **Bandwidth** | Unlimited (flatrate) |
+| **Extras** | Snapshots (CoW), remote console, backup system |
 
 #### Why This Stack
 
-- **Zero cold starts** — Hetzner VPS is always-on; no SEO penalty from serverless spin-up delays
-- **Zero database latency** — PostgreSQL runs on the same VPS as Payload CMS (same Docker network via Coolify)
-- **Zero egress fees** — Cloudflare R2 serves media globally without bandwidth charges
+- **All-in-one** — Frontend, CMS, database, and media storage on a single server; zero external accounts (except Resend)
+- **Zero latency** — PostgreSQL + MinIO on same Docker network = 0ms inter-service latency
+- **Zero cold starts** — VPS is always-on; no SEO penalty from serverless spin-up delays
+- **Zero CORS issues** — Frontend and Payload API share the same origin (Payload Local API)
 - **Set and forget** — Coolify provides a visual UI for deployments, auto-SSL, and GitHub push-to-deploy
 - **SEO-bulletproof** — Critical for local locksmith search ("locksmith near me" at 2 AM must load instantly)
+- **~20ms to Ohio** — Manassas, VA is ideal for serving the Cleveland metro area
 
 #### Architecture
 
 ```
-apps/web/  → Cloudflare Pages (static/SSR frontend)
-               ↓ REST API calls (NEXT_PUBLIC_CMS_URL)
-apps/cms/  → Hetzner VPS via Coolify
-               ├── Payload CMS (Docker container)
-               ├── PostgreSQL (Docker container, same network)
-               └── Auto-backup DB → Cloudflare R2
+Single Next.js + Payload 3.x App → Netcup VPS via Coolify
+  ├── Next.js frontend (SSR/ISR pages)
+  ├── Payload CMS admin (/admin)
+  ├── Payload API (Local API, no network hop)
+  ├── PostgreSQL (Docker container, same network)
+  ├── MinIO (Docker container, S3-compatible media storage)
+  └── Coolify manages: auto-SSL, GitHub push-to-deploy, backups
 ```
 
 #### Scaling Path
 
 | Traffic | Action | Cost |
 |---------|--------|------|
-| 0–1,000 visitors/day | Current stack | €4/mo |
-| 1,000–10,000 visitors/day | Upgrade Hetzner to 4GB RAM (€7/mo) | €7/mo |
+| 0–1,000 visitors/day | Current stack (4GB RAM) | ~€5.28/mo |
+| 1,000–10,000 visitors/day | Upgrade to VPS 1000 G12 (8GB RAM) | ~€8/mo |
 | 10,000+ visitors/day | Split DB to dedicated server or managed PostgreSQL | €15–25/mo |
 
 ### Why This Matters
-- The current frontend lives in a **Lovable GitHub repo** — backend code must not break the existing frontend build
-- Clean separation enables the team to push backend changes without risking frontend regressions
+- **Single repo, single deployment** — The Lovable GitHub repo contains both frontend and CMS; Coolify auto-deploys on push
+- Internal `apps/web/` and `apps/cms/` separation keeps code organized without deployment complexity
 - Enables future migration (e.g., swap Payload for another CMS) without touching frontend code
-- Each app can have its own CI/CD pipeline via GitHub Actions
 - **Always-on VPS** ensures Google crawler never hits a cold start wall
+- **No external services to manage** — Everything runs in Coolify's dashboard
 
 ---
 
