@@ -1,15 +1,57 @@
-# Xcel Locksmith — CMS Backend Requirements
+# Xcel Locksmith — Full-Stack Requirements
 
 > **For:** Kiro IDE Spec-Driven Development  
 > **Reference PRD:** `cms_prd.md` (v2.1)  
-> **Date:** 2026-02-27  
-> **Frontend Status:** Complete (React SPA with static data files)
+> **Frontend Docs:** `FRONTEND.md` (complete architecture, components, data, design system)  
+> **Deployment Guide:** `DEPLOYMENT.md` (Netcup + Coolify setup)  
+> **Date:** 2026-02-28
 
 ---
 
 ## Overview
 
-The frontend React SPA for Xcel Locksmith is **fully built** with 58 SEO-optimized pages, structured data (JSON-LD), breadcrumb navigation, internal linking, and a robots.txt. All content currently comes from static TypeScript files in `src/data/`. The goal is to build a **Payload CMS 3.x backend on Next.js 15** that replaces these static imports with API-driven data, making everything editable via an admin dashboard.
+The frontend React SPA for Xcel Locksmith is **fully built** with 59 SEO-optimized pages, structured data (JSON-LD), breadcrumb navigation, internal linking, and a robots.txt. All content currently comes from static TypeScript files in `src/data/`. The goal is to build a **Payload CMS 3.x backend on Next.js 15** that replaces these static imports with API-driven data, making everything editable via an admin dashboard.
+
+---
+
+## Frontend Summary (see `FRONTEND.md` for full details)
+
+### Tech Stack
+React 18 + Vite + Tailwind CSS + TypeScript + Framer Motion + GSAP + Leaflet + shadcn/ui + react-helmet-async
+
+### Pages (59 total)
+- **Homepage** (`/`) — Config-driven section rendering via `siteConfig.ts`
+- **3 Category pages** (`/services/:category`) — residential, commercial, automotive
+- **29 Service pages** (`/services/:category/:slug`) — individual service landing pages
+- **1 Service Areas hub** (`/service-areas`) — grid + Leaflet map
+- **24 City pages** (`/service-areas/:citySlug`) — city-specific landing pages
+- **1 Not Found** (`*`) — 404 catch-all
+
+### Data Files (→ CMS Collections)
+| File | Records | → CMS Collection |
+|------|---------|------------------|
+| `services.ts` + `serviceDetails.ts` | 29 services | `services` |
+| `locations.ts` | 24 cities | `service-areas` |
+| `team.ts` | 4 members, 12 certs | `team-members` |
+| `reviews.ts` | 5 reviews | `reviews` |
+| `faqs.ts` | 7 FAQs | `faqs` |
+| `vehicles.ts` | 10 makes, 50+ models | `vehicle-makes` + `vehicle-models` |
+| `siteConfig.ts` | Brand, nav, sections, contact | `site-settings` + `homepage-layout` + `navigation` globals |
+
+### Design System
+- **Fonts:** Sora (display), Plus Jakarta Sans (body), DM Serif Display (accent)
+- **Colors:** Navy (`--primary`), Blue (`--accent`), Red (`--cta-red`), with full dark mode
+- **Effects:** Glassmorphism cards, skeuomorphic CTA buttons, gradient backgrounds, pulse-glow animations
+- **Components:** 40+ shadcn/ui primitives + 20 custom components
+
+### Key Interactive Components (→ Client Components in Next.js)
+`QuoteTool` (4-step form), `VehicleVerifier` (make→model cascade), `ReviewsSection` (add review), `CertificateViewer` (zoom/nav modal), `ComparisonSlider` (drag), `ServiceAreaMap` (Leaflet), `HeroLockAnimation` (46-frame GSAP scroll), `StickyHeader` (scroll-aware nav)
+
+### SEO
+- Unique `<title>` + `<meta description>` per page
+- JSON-LD: `LocalBusiness`, `FAQPage`, `Organization`, `BreadcrumbList`, `Service`, `Locksmith`
+- Internal linking via footer, breadcrumbs, related services, nearby cities
+- `robots.txt` with sitemap reference
 
 ---
 
@@ -130,21 +172,22 @@ Single Next.js + Payload 3.x App → Netcup VPS via Coolify
 ## Requirement 1: Project Initialization
 
 ### Description
-Initialize the Next.js 15 + Payload CMS 3.x project with PostgreSQL (Neon) and S3-compatible media storage (Cloudflare R2).
+Initialize the Next.js 15 + Payload CMS 3.x project with local PostgreSQL and S3-compatible media storage (MinIO) in the existing monorepo.
 
 ### Acceptance Criteria
-- [ ] Next.js 15 project with App Router initialized
+- [ ] Next.js 15 project with App Router initialized in `apps/web/` + `apps/cms/`
 - [ ] Payload CMS 3.x installed and configured with PostgreSQL adapter
-- [ ] Database connection to Neon PostgreSQL established
-- [ ] S3-compatible storage (Cloudflare R2) configured for media uploads
+- [ ] Database connection to local PostgreSQL (same Docker network via Coolify)
+- [ ] S3-compatible storage (MinIO) configured for media uploads
 - [ ] Payload admin UI accessible at `/admin`
-- [ ] Environment variables documented (see `cms_prd.md` Appendix A)
-- [ ] Deployed skeleton to Vercel
+- [ ] Environment variables documented (see `DEPLOYMENT.md` Section 6)
+- [ ] Deployed skeleton to Netcup VPS via Coolify
 
 ### Technical Notes
 - Use `@payloadcms/db-postgres` adapter
-- Use `@payloadcms/storage-s3` for media
+- Use `@payloadcms/storage-s3` for MinIO (S3-compatible)
 - See `cms_prd.md` Section 3 for full tech stack
+- See `DEPLOYMENT.md` for Coolify container setup
 
 ---
 
@@ -547,6 +590,9 @@ Breadcrumb: Home > {Category} > {Service} > {Service} in {City}
 
 ## Reference Documents
 
+- `FRONTEND.md` — Complete frontend architecture, components, data files, design system, SEO strategy, and CMS migration map
+- `DEPLOYMENT.md` — Step-by-step Coolify setup on Netcup VPS: PostgreSQL, MinIO, app deployment, domain/SSL, backups
 - `cms_prd.md` — Full technical PRD with architecture, schema, collection configs, API layer, and deployment details
 - `PRD.md` — Original backend roadmap (superseded by cms_prd.md)
 - `locksmith_business_prd.md` — Future multi-tenant SaaS vision (out of scope for initial CMS build)
+- `GUIDE.md` — Client-facing layman's guide explaining site features and future CMS capabilities
